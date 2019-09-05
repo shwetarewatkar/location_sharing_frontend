@@ -1,0 +1,29 @@
+import React, { Component } from 'react';
+import { Route, Router, Link } from 'react-router-dom';
+import history from './History';
+import Login from './Component/Login';
+import Registration from './Component/Registration';
+import User from './Component/User/index';
+import People from './Component/User/people';
+import Groups from './Component/Group/index';
+import Setting from './Component/Settings/index';
+
+class Routers extends Component {
+
+    render() {
+        return (
+            <Router history={history}>
+                <div>
+                    <Route exact path="/" component={Login} />
+                    <Route exact path="/registration" component={Registration} />
+                    <Route exact path="/user" component={User} />
+                    <Route exact path="/people" component={People} />
+                    <Route exact path="/groups" component={Groups} />
+                    <Route exact path="/setting" component={Setting} />
+                </div>
+            </Router>
+        )
+    }
+}
+
+export default Routers;
