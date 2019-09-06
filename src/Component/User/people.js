@@ -57,8 +57,11 @@ export default class People extends React.Component {
 
                 case 'PeopleList':
                     this.setState({
-                        peoples: res.data
+                        peoples: res.data,
+                        removeid: '',
+                        removemodelshow: false
                     })
+                    this.state.removemodelshow = false;
 
                     break;
             }
@@ -86,18 +89,20 @@ export default class People extends React.Component {
         }
 
         this.services.senddata('RemovePeople', data);
-        this.services.getdata().subscribe((res) => {
-            switch (res.event) {
-                case 'PeopleList':
-                    this.setState({
-                        peoples: res.data,
-                        removeid: '',
-                        removemodelshow: false
-                    })
-                    this.state.removemodelshow = false;
-                    break;
-            }
-        });
+        alertify.success("Deleted Successfully");
+        
+        // this.services.getdata().subscribe((res) => {
+        //     switch (res.event) {
+        //         case 'PeopleList':
+        //             this.setState({
+        //                 peoples: res.data,
+        //                 removeid: '',
+        //                 removemodelshow: false
+        //             })
+        //             this.state.removemodelshow = false;
+        //             break;
+        //     }
+        // });
 
     }
 
@@ -109,8 +114,6 @@ export default class People extends React.Component {
     }
 
     render() {
-
-        console.log(this.state);
 
         return (
 

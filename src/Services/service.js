@@ -3,7 +3,7 @@ import axios from 'axios';
 import socketIOClient from "socket.io-client";
 import { Observable, Observer } from 'rxjs';
 
-const socket = socketIOClient("http://192.168.0.15:1337");
+const socket = socketIOClient("http://192.168.0.15:6030");
 
 export default class Service extends Component {
 

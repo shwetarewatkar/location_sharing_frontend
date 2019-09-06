@@ -129,19 +129,27 @@ export default class Groups extends React.Component {
             }
 
             this.services.senddata('AddGroup', data);
-            this.services.getdata().subscribe((res) => {
+            this.setState({
+                groupname: '',
+                addnewgroupmodelshow: false
+            })
+            this.addnewgroupmodelshow = false;
+            alertify.success("Add Successfully");
 
-                switch (res.event) {
-                    case 'GroupList':
-                        this.setState({
-                            groups: res.data,
-                            groupname: '',
-                            addnewgroupmodelshow: false
-                        })
-                        this.addnewgroupmodelshow = false;
-                        break;
-                }
-            });
+            // this.services.getdata().subscribe((res) => {
+
+            //     switch (res.event) {
+            //         case 'GroupList':
+            //             this.setState({
+            //                 groups: res.data,
+            //                 groupname: '',
+            //                 addnewgroupmodelshow: false
+            //             })
+            //             this.addnewgroupmodelshow = false;
+            //             // alertify.success("Add Successfully");
+            //             break;
+            //     }
+            // });
 
         }
 
@@ -162,6 +170,7 @@ export default class Groups extends React.Component {
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
                 case 'GroupList':
+                    console.log("recieved:- ", res);
                     this.setState({
                         groups: res.data
                     })
@@ -192,19 +201,27 @@ export default class Groups extends React.Component {
         }
 
         this.services.senddata('DeleteGroup', data);
-        this.services.getdata().subscribe((res) => {
+        this.setState({
+            gid: '',
+            groupdeletemodelshow: false
+        })
+        this.state.groupdeletemodelshow = false;
+        alertify.success("Deleted Successfully");
 
-            switch (res.event) {
-                case 'GroupList':
-                    this.setState({
-                        groups: res.data,
-                        gid: '',
-                        groupdeletemodelshow: false
-                    })
-                    this.state.groupdeletemodelshow = false;
-                    break;
-            }
-        });
+        // this.services.getdata().subscribe((res) => {
+        //     switch (res.event) {
+        //         case 'GroupList':
+        //             console.log("recieved:- ", res);
+        //             this.setState({
+        //                 groups: res.data,
+        //                 gid: '',
+        //                 groupdeletemodelshow: false
+        //             })
+        //             this.state.groupdeletemodelshow = false;
+        //             alertify.success("Deleted Successfully");
+        //             break;
+        //     }
+        // });
 
     }
 
