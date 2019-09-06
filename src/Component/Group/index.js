@@ -21,24 +21,34 @@ export default class Groups extends React.Component {
         this.onGroupSubmit = this.onGroupSubmit.bind(this);
         this.onChangeGroupName = this.onChangeGroupName.bind(this);
         this.delgroupdata = this.delgroupdata.bind(this);
+        this.onCloseModel = this.onCloseModel.bind(this);
+        this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
+        this.onAddNewGroup = this.onAddNewGroup.bind(this);
 
         this.state = {
             groups: [],
+            members: [],
             uid: '',
             gid: '',
             groupName: '',
             invitecode: '',
             errcode: true,
             groupname: '',
-            errgname: true
+            errgname: true,
+            disgmembershow: false,
+            groupmodelshow: false,
+            groupdeletemodelshow: false,
+            addnewgroupmodelshow: false
         }
+
+
 
     }
 
     componentDidMount() {
 
+        this.auth.authantication();
         this.getAllGroups();
-
     }
 
     onChangeInviteCode(e) {
@@ -76,19 +86,21 @@ export default class Groups extends React.Component {
                 InviteCode: this.state.invitecode
             };
 
-            console.log(data);
+            this.services.senddata('AddMember', data);
+            this.services.getdata().subscribe((res) => {
 
-            // this.services.senddata('AddMember', data);
-            // this.services.getdata().subscribe((res) => {
+                switch (res.event) {
+                    case 'AddMemebrResp':
 
-            //     switch (res.event) {
-            //         case 'GroupList':
-            //             this.setState({
-            //                 groups: res.data
-            //             })
-            //             break;
-            //     }
-            // });
+                        this.setState({
+                            invitecode: '',
+                            groupmodelshow: false
+                        })
+                        this.state.groupmodelshow = false;
+
+                        break;
+                }
+            });
 
         }
 
@@ -123,8 +135,10 @@ export default class Groups extends React.Component {
                     case 'GroupList':
                         this.setState({
                             groups: res.data,
-                            groupname: ''
+                            groupname: '',
+                            addnewgroupmodelshow: false
                         })
+                        this.addnewgroupmodelshow = false;
                         break;
                 }
             });
@@ -144,11 +158,8 @@ export default class Groups extends React.Component {
             uid: uid
         })
 
-        this.auth.authantication();
-
         this.services.senddata('GetGroupsList', '');
         this.services.getdata().subscribe((res) => {
-
             switch (res.event) {
                 case 'GroupList':
                     this.setState({
@@ -162,9 +173,22 @@ export default class Groups extends React.Component {
 
     delgroupdata(id) {
 
+        this.setState({
+            gid: id,
+            groupdeletemodelshow: true
+        })
+
+        this.state.groupdeletemodelshow = true;
+
+    }
+
+    onDeleteSubmit(e) {
+
+        e.preventDefault();
+
         var data = {
             uid: this.state.uid,
-            groupId: id
+            groupId: this.state.gid
         }
 
         this.services.senddata('DeleteGroup', data);
@@ -173,8 +197,11 @@ export default class Groups extends React.Component {
             switch (res.event) {
                 case 'GroupList':
                     this.setState({
-                        groups: res.data
+                        groups: res.data,
+                        gid: '',
+                        groupdeletemodelshow: false
                     })
+                    this.state.groupdeletemodelshow = false;
                     break;
             }
         });
@@ -184,28 +211,86 @@ export default class Groups extends React.Component {
     getgroupdata(id, name) {
         this.setState({
             gid: id,
-            groupName: name
+            groupName: name,
+            groupmodelshow: true
         })
+
+        this.state.groupmodelshow = true;
     }
 
     onGetdata(id, name) {
 
         this.setState({
             gid: id,
-            groupName: name
+            groupName: name,
+            disgmembershow: true
         })
 
-        // this.services.getgroupmemberbyid(id).then(res => {
+        this.state.disgmembershow = true;
 
-        //     console.log(res);
+        var data = {
+            uid: this.state.uid,
+            GroupId: id
+        }
 
-        // }).catch(function (error) {
-        //     console.log(error);
-        // })
+        this.services.senddata('GetMemeberList', data);
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'GroupMemberList':
+                    this.setState({
+                        members: res.data
+                    })
+                    break;
+            }
+        });
 
     }
 
+    onRemoveMember(rmid) {
+
+        var data = {
+            uid: this.state.uid,
+            GroupId: this.state.gid,
+            RmId: rmid
+        }
+
+        this.services.senddata('RemoveMember', data);
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'GroupMemberList':
+                    this.setState({
+                        members: res.data
+                    })
+                    break;
+            }
+        });
+
+
+
+    }
+
+    onAddNewGroup() {
+        this.setState({
+            addnewgroupmodelshow: true
+        })
+        this.state.addnewgroupmodelshow = true;
+    }
+
+    onCloseModel() {
+        this.setState({
+            disgmembershow: false,
+            groupmodelshow: false,
+            groupdeletemodelshow: false,
+            addnewgroupmodelshow: false
+        })
+        this.state.disgmembershow = false;
+        this.state.groupmodelshow = false;
+        this.state.groupdeletemodelshow = false;
+        this.state.addnewgroupmodelshow = false;
+    }
+
     render() {
+
         return (
 
             <div id="wrapper">
@@ -226,7 +311,7 @@ export default class Groups extends React.Component {
                                         <div className="card-body">
                                             <div className="table-responsive">
                                                 <div>
-                                                    <button type="submit" className="btn btn-primary" data-toggle="modal" data-target="#newgroup"><i className="fas fa-plus"></i> Add New</button>
+                                                    <button type="button" className="btn btn-primary" onClick={this.onAddNewGroup}><i className="fas fa-plus"></i> Add New</button>
                                                 </div>
                                                 <br />
                                                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
@@ -243,10 +328,10 @@ export default class Groups extends React.Component {
                                                                 return (
                                                                     <tr key={i}>
                                                                         <td>
-                                                                            <span className="btn-hover myspan" onClick={this.onGetdata.bind(this, obj._id, obj.groupname)} data-toggle="modal" data-target="#groupmember">{obj.groupname}</span>
+                                                                            <span className="btn-hover myspan" onClick={this.onGetdata.bind(this, obj._id, obj.groupname)}>{obj.groupname}</span>
                                                                         </td>
                                                                         <td>
-                                                                            <span className="btn btn-primary btn-hover" onClick={this.getgroupdata.bind(this, obj._id, obj.groupname)} data-toggle="modal" data-target="#groupmodel"><i className="fas fa-plus"></i></span>
+                                                                            <span className="btn btn-primary btn-hover" onClick={this.getgroupdata.bind(this, obj._id, obj.groupname)}><i className="fas fa-plus"></i></span>
                                                                             &nbsp;&nbsp;
                                                                             {
                                                                                 (obj.default == true) ?
@@ -273,14 +358,14 @@ export default class Groups extends React.Component {
                     </div>
                     <Footer />
                 </div>
-                <div className="modal fade" id="groupmodel" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div className={(this.state.groupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmodel" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
                         <div className="modal-content">
                             <form onSubmit={this.onJoinSubmit}>
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalCenterTitle">Join {this.state.groupName} Group</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -298,7 +383,7 @@ export default class Groups extends React.Component {
 
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
                                     <button type="submit" className="btn btn-primary" >Join</button>
                                 </div>
                             </form>
@@ -307,44 +392,97 @@ export default class Groups extends React.Component {
                     </div>
                 </div>
 
-                <div className="modal fade" id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                {
+                    (this.state.groupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
+                }
+
+                <div className={(this.state.disgmembershow) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
                         <div className="modal-content">
                             <form onSubmit={this.onSubmit}>
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalCenterTitle">{this.state.groupName} Group Members</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div className="modal-body">
-                                    <div className="row mymargin">
-                                        <div className="col-xl-10">
-                                            <span>Usaername</span>
-                                        </div>
-                                        <div className="col-xl-2">
-                                            <i className="fas fa-times myitag"></i>
-                                        </div>
-                                    </div>
+                                    {
+                                        this.state.members.map(function (obj, i) {
+                                            return (
+                                                <div className="row mymargin" key={i}>
+                                                    <div className="col-xl-10">
+                                                        {
+                                                            (obj.uid == this.state.uid) ?
+                                                                <span>You</span> :
+                                                                <span>{obj.username}</span>
+                                                        }
+                                                    </div>
+                                                    <div className="col-xl-2">
+                                                        {
+                                                            (obj.uid == this.state.uid) ?
+                                                                '' :
+                                                                <span onClick={this.onRemoveMember.bind(this, obj.uid)} className="btn btn-danger btn-hover">
+                                                                    <i className="fas fa-times"></i>
+                                                                </span>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            )
+                                        }, this)
+                                    }
+
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
                                 </div>
                             </form>
                         </div>
 
                     </div>
                 </div>
+                {
+                    (this.state.disgmembershow) ? <div className="modal-backdrop fade show"></div> : ''
+                }
 
-                <div className="modal fade" id="newgroup" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div className={(this.state.groupdeletemodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+
+                        <div className="modal-content">
+                            <form onSubmit={this.onDeleteSubmit}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalCenterTitle">Delete Group</h5>
+                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    Are Your Sure You Want To Delete ?
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
+                                    <button type="submit" className="btn btn-danger" >Delete</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                {
+                    (this.state.groupdeletemodelshow) ? <div className="modal-backdrop fade show"></div> : ''
+                }
+
+
+                <div className={(this.state.addnewgroupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} id="newgroup" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
                         <div className="modal-content">
                             <form onSubmit={this.onGroupSubmit}>
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalCenterTitle">Add New Group</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -361,7 +499,7 @@ export default class Groups extends React.Component {
                                     </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
                                     <button type="submit" className="btn btn-primary">Add</button>
                                 </div>
                             </form>
@@ -369,6 +507,9 @@ export default class Groups extends React.Component {
 
                     </div>
                 </div>
+                {
+                    (this.state.addnewgroupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
+                }
 
             </div>
 
@@ -376,8 +517,3 @@ export default class Groups extends React.Component {
     }
 
 }
-
-
-
-
-

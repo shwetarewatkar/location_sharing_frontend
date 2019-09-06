@@ -298,8 +298,13 @@ class Login extends Component {
                                                     Login
                                                 </button>
                                                 <br />
-                                                <div className="text-center">
-                                                    <Link className="small" to={'/registration'}>Create an Account!</Link>
+                                                <div className="row">
+                                                    <div className="col-md-6 text-left">
+                                                        <Link className="small" to={'/registration'}>Create an Account!</Link>
+                                                    </div>
+                                                    <div className="col-md-6 text-right">
+                                                        <Link className="small" to={'/confirm'}>Forgot Password</Link>
+                                                    </div>
                                                 </div>
 
                                                 <hr />

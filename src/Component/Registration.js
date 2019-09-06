@@ -334,7 +334,7 @@ export default class Registration extends Component {
                                         <hr />
                                         <button onClick={this.Google_Login} type="button" className="btn btn-google btn-user btn-block" style={{ background: '#ea4335', color: 'white' }}>
                                             <i className="fab fa-google fa-fw"></i> Login with Google
-                                                </button>
+                                        </button>
                                         {/* <Link href="index.html" className="btn btn-facebook btn-user btn-block" style={{ background: '#3b5998', color: 'white' }}>
                                             <i className="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </Link> */}

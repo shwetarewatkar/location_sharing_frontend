@@ -36,3 +36,11 @@ code {
   color: black;
   padding: 5px;
 }
+
+.disblock{
+  display: block !important;
+}
+
+.disnone{
+  display: none !important;
+}
