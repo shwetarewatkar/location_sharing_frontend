@@ -20,13 +20,15 @@ export default class Navigation extends React.Component {
     userDetails() {
 
         let decryptedData_username = localStorage.getItem('username');
-        var bytes_username = CryptoJS.AES.decrypt(decryptedData_username.toString(), 'Location-Sharing');
-        var username = JSON.parse(bytes_username.toString(CryptoJS.enc.Utf8));
+        if (decryptedData_username) {
+            var bytes_username = CryptoJS.AES.decrypt(decryptedData_username.toString(), 'Location-Sharing');
+            var username = JSON.parse(bytes_username.toString(CryptoJS.enc.Utf8));
 
+            this.setState({
+                username: username
+            })
+        }
 
-        this.setState({
-            username: username
-        })
 
     }
 

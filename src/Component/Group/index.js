@@ -24,6 +24,7 @@ export default class Groups extends React.Component {
         this.onCloseModel = this.onCloseModel.bind(this);
         this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
         this.onAddNewGroup = this.onAddNewGroup.bind(this);
+        this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
 
         this.state = {
             groups: [],
@@ -31,6 +32,7 @@ export default class Groups extends React.Component {
             uid: '',
             gid: '',
             groupName: '',
+            rmid: '',
             invitecode: '',
             errcode: true,
             groupname: '',
@@ -38,7 +40,8 @@ export default class Groups extends React.Component {
             disgmembershow: false,
             groupmodelshow: false,
             groupdeletemodelshow: false,
-            addnewgroupmodelshow: false
+            addnewgroupmodelshow: false,
+            removegroupmodelshow: false
         }
 
 
@@ -87,20 +90,29 @@ export default class Groups extends React.Component {
             };
 
             this.services.senddata('AddMember', data);
-            this.services.getdata().subscribe((res) => {
 
-                switch (res.event) {
-                    case 'AddMemebrResp':
+            this.setState({
+                invitecode: '',
+                groupmodelshow: false
+            })
+            this.state.groupmodelshow = false;
 
-                        this.setState({
-                            invitecode: '',
-                            groupmodelshow: false
-                        })
-                        this.state.groupmodelshow = false;
+            alertify.success("Join Successfully");
 
-                        break;
-                }
-            });
+            // this.services.getdata().subscribe((res) => {
+            //     switch (res.event) {
+            //         case 'AddMemebrResp':
+            //             this.setState({
+            //                 invitecode: '',
+            //                 groupmodelshow: false
+            //             })
+            //             this.state.groupmodelshow = false;
+
+            //             alertify.success("Join Successfully");
+
+            //             break;
+            //     }
+            // });
 
         }
 
@@ -135,22 +147,6 @@ export default class Groups extends React.Component {
             })
             this.addnewgroupmodelshow = false;
             alertify.success("Add Successfully");
-
-            // this.services.getdata().subscribe((res) => {
-
-            //     switch (res.event) {
-            //         case 'GroupList':
-            //             this.setState({
-            //                 groups: res.data,
-            //                 groupname: '',
-            //                 addnewgroupmodelshow: false
-            //             })
-            //             this.addnewgroupmodelshow = false;
-            //             // alertify.success("Add Successfully");
-            //             break;
-            //     }
-            // });
-
         }
 
 
@@ -170,7 +166,6 @@ export default class Groups extends React.Component {
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
                 case 'GroupList':
-                    console.log("recieved:- ", res);
                     this.setState({
                         groups: res.data
                     })
@@ -207,21 +202,6 @@ export default class Groups extends React.Component {
         })
         this.state.groupdeletemodelshow = false;
         alertify.success("Deleted Successfully");
-
-        // this.services.getdata().subscribe((res) => {
-        //     switch (res.event) {
-        //         case 'GroupList':
-        //             console.log("recieved:- ", res);
-        //             this.setState({
-        //                 groups: res.data,
-        //                 gid: '',
-        //                 groupdeletemodelshow: false
-        //             })
-        //             this.state.groupdeletemodelshow = false;
-        //             alertify.success("Deleted Successfully");
-        //             break;
-        //     }
-        // });
 
     }
 
@@ -265,23 +245,41 @@ export default class Groups extends React.Component {
 
     onRemoveMember(rmid) {
 
+        this.setState({
+            removegroupmodelshow: true,
+            disgmembershow: false,
+            rmid: rmid
+        })
+
+        this.state.removegroupmodelshow = true;
+        this.state.disgmembershow = false;
+
+    }
+
+    onRemoveDeleteSubmit(e) {
+        e.preventDefault();
+
         var data = {
             uid: this.state.uid,
             GroupId: this.state.gid,
-            RmId: rmid
+            RmId: this.state.rmid,
+            removegroupmodelshow: false
         }
 
-        this.services.senddata('RemoveMember', data);
-        this.services.getdata().subscribe((res) => {
-            switch (res.event) {
-                case 'GroupMemberList':
-                    this.setState({
-                        members: res.data
-                    })
-                    break;
-            }
-        });
 
+        this.services.senddata('RemoveMember', data);
+        this.state.removegroupmodelshow = false;
+        alertify.success("Remove Successfully");
+
+        // this.services.getdata().subscribe((res) => {
+        //     switch (res.event) {
+        //         case 'GroupMemberList':
+        //             this.setState({
+        //                 members: res.data
+        //             })
+        //             break;
+        //     }
+        // });
 
 
     }
@@ -298,12 +296,14 @@ export default class Groups extends React.Component {
             disgmembershow: false,
             groupmodelshow: false,
             groupdeletemodelshow: false,
-            addnewgroupmodelshow: false
+            addnewgroupmodelshow: false,
+            removegroupmodelshow: false
         })
         this.state.disgmembershow = false;
         this.state.groupmodelshow = false;
         this.state.groupdeletemodelshow = false;
         this.state.addnewgroupmodelshow = false;
+        this.state.removegroupmodelshow = false;
     }
 
     render() {
@@ -528,6 +528,32 @@ export default class Groups extends React.Component {
                     (this.state.addnewgroupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
 
+                <div className={(this.state.removegroupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+
+                        <div className="modal-content">
+                            <form onSubmit={this.onRemoveDeleteSubmit}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalCenterTitle">Delete Member</h5>
+                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    Are Your Sure You Want To Delete ?
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
+                                    <button type="submit" className="btn btn-danger" >Delete</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                {
+                    (this.state.removegroupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
+                }
             </div>
 
         );

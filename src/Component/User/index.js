@@ -59,8 +59,10 @@ export default class User extends React.Component {
         var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
         var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
 
+        // console.log();
+
         this.setState({
-            sharelink: "http://localhost:3000/invite?id=" + code,
+            sharelink: this.auth.services.domail + code,
             uid: uid
         })
 

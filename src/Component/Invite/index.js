@@ -38,36 +38,40 @@ export default class Invite extends React.Component {
         let id = params.get('id')
 
         let decryptedData_invite = localStorage.getItem('invitecode');
-        var bytes_invite = CryptoJS.AES.decrypt(decryptedData_invite.toString(), 'Location-Sharing');
-        var invite = JSON.parse(bytes_invite.toString(CryptoJS.enc.Utf8));
+        if (decryptedData_invite) {
+            var bytes_invite = CryptoJS.AES.decrypt(decryptedData_invite.toString(), 'Location-Sharing');
+            var invite = JSON.parse(bytes_invite.toString(CryptoJS.enc.Utf8));
 
-        if (invite == id) {
-            this.props.history.push('/');
-        } else {
+            if (invite == id) {
+                console.log("same");
+                this.props.history.push('/');
+            } else {
+                console.log("not same");
+                this.setState({
+                    otherid: id
+                })
 
-            this.setState({
-                otherid: id
-            })
+                this.services.senddata('GetGroupsList', '');
+                this.services.getdata().subscribe((res) => {
+                    switch (res.event) {
+                        case 'GroupList':
+                            this.setState({
+                                groups: res.data
+                            })
+                            break;
+                    }
+                });
 
-            this.services.senddata('GetGroupsList', '');
-            this.services.getdata().subscribe((res) => {
-                switch (res.event) {
-                    case 'GroupList':
-                        this.setState({
-                            groups: res.data
-                        })
-                        break;
-                }
-            });
+                let decryptedData_uid = localStorage.getItem('uid');
+                var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
+                var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
 
-            let decryptedData_uid = localStorage.getItem('uid');
-            var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
-            var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
-
-            this.setState({
-                uid: uid
-            })
+                this.setState({
+                    uid: uid
+                })
+            }
         }
+
 
     }
 

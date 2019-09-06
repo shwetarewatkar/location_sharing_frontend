@@ -8,6 +8,7 @@ const socket = socketIOClient("http://192.168.0.15:6030");
 export default class Service extends Component {
 
     apiURL = "http://new-dev.artoon.in:6029";
+    domail = "https://ls.artoon.in/invite?id=";
 
     // getdatabyid(id) {
     //     return axios.get(`${this.apiURL}/location/getid/` + id);
