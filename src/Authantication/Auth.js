@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Service from '../Services/service';
 import CryptoJS from 'crypto-js';
+import alertify from 'alertifyjs';
 
 export default class Auth extends React.Component {
 
@@ -14,7 +15,7 @@ export default class Auth extends React.Component {
     authantication() {
 
         let decryptedData_uid = localStorage.getItem('uid');
-        if (bytes_uid) {
+        if (decryptedData_uid) {
             var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
             var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
         }
@@ -58,6 +59,7 @@ export default class Auth extends React.Component {
 
             switch (res.event) {
                 case 'Auth_Status':
+                    // alertify.success("Login Suuccessfully");
                     break;
             }
         });

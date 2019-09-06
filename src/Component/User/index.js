@@ -98,6 +98,15 @@ export default class User extends React.Component {
                 case 'GroupMemberList':
 
                     for (var i = 0; i < res.data.length; i++) {
+
+                        // let decryptedData_lat = res.data[i].latitude;
+                        // var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                        // var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                        // let decryptedData_long = res.data[i].longitude;
+                        // var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                        // var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
                         var uluru = { lat: parseFloat(res.data[i].latitude), lng: parseFloat(res.data[i].longitude) };
 
                         marker = new window.google.maps.Marker({
