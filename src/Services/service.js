@@ -7,7 +7,7 @@ const socket = socketIOClient("http://192.168.0.15:1337");
 
 export default class Service extends Component {
 
-    apiURL = "http://localhost:4000";
+    apiURL = "http://new-dev.artoon.in:6029";
 
     // getdatabyid(id) {
     //     return axios.get(`${this.apiURL}/location/getid/` + id);
