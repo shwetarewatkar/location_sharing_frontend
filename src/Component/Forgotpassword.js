@@ -1,0 +1,136 @@
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import firebase from 'firebase';
+import Service from '../Services/service';
+import alertify from 'alertifyjs';
+import CryptoJS from 'crypto-js';
+
+
+
+export default class Forgot extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.services = new Service();
+        this.onChangeEmail = this.onChangeEmail.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+
+        this.state = {
+            email: '',
+            erremail: true
+        }
+
+        var config = {
+            apiKey: "AIzaSyBLE5yO7ozj753lTC22A94OuTsLYvZGnpE",
+            authDomain: "location-sharing-31142.firebaseapp.com",
+            databaseURL: "https://location-sharing-31142.firebaseio.com",
+            projectId: "location-sharing-31142",
+            storageBucket: "gs://location-sharing-31142.appspot.com/"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
+
+    }
+
+    componentDidMount() {
+        this.removeLocalstorage();
+    }
+
+    onChangeEmail(e) {
+        this.setState({
+            email: e.target.value
+        });
+    }
+
+    removeLocalstorage() {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("invitecode");
+        localStorage.removeItem("latitude");
+        localStorage.removeItem("longitude");
+    }
+
+    onSubmit(e) {
+        e.preventDefault();
+
+        if (this.state.email == '') {
+            this.setState({
+                erremail: false
+            });
+            this.state.erremail = false;
+        } else {
+            this.setState({
+                erremail: true
+            });
+            this.state.erremail = true;
+        }
+
+        var user = firebase.auth().currentUser;
+
+        if (this.state.erremail == true) {
+
+            user.sendEmailVerification().then(() => {
+                this.props.history.push('/forgot');
+            }).catch(function (error) {
+                console.log(error);
+            });
+
+        }
+
+    }
+
+    render() {
+        return (
+            <div className="container">
+
+                <div className="row justify-content-center">
+
+                    <div className="col-xl-10 col-lg-12 col-md-9">
+
+                        <div className="card o-hidden border-0 shadow-lg my-5">
+                            <div className="card-body p-0">
+                                <div className="row">
+                                    <div className="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                                    <div className="col-lg-6">
+                                        <div className="p-5">
+                                            <div className="text-center">
+                                                <h1 className="h4 text-gray-900 mb-4">Email Confirmation</h1>
+                                            </div>
+                                            <form className="user" onSubmit={this.onSubmit}>
+                                                <div className="form-group">
+                                                    {
+                                                        (this.state.erremail) ?
+                                                            <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                            :
+                                                            <input type="email" style={{ border: '1px solid red' }} value={this.state.email} onChange={this.onChangeEmail} className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                    }
+
+                                                </div>
+                                                <button type="submit" className="btn btn-primary btn-user btn-block" style={{ color: 'white' }}>
+                                                    Confirm
+                                                </button>
+                                                <hr />
+                                                <div className="text-center">
+                                                    <Link className="small" to={'/'}>Already have an account? Login!</Link>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        );
+    }
+
+}
