@@ -1,0 +1,17 @@
+deploy_dev:
+  stage: deploy
+  tags: 
+    - new-dev
+  environment:
+    name: dev
+    url: https://ls.artoon.in/
+  script:
+    - cd /var/www/html/dev/location-sharing
+    - git pull http://$usr:$pwd@gitlab.artoon.in/WebSites/ReactJS/location-sharing.git
+    - npm install --cache
+    - npm run-script build
+  after_script:
+    - cd /var/www/html/dev/location-sharing
+    - cp htaccess build/.htaccess
+    - ls build/.htaccess 
+  when: manual
