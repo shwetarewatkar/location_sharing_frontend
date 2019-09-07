@@ -237,20 +237,20 @@ class Login extends Component {
                 var alllongchar = this.state.latitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
-                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
-                // localStorage.setItem("latitude", latitude.toString());
+                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                localStorage.setItem("latitude", latitude.toString());
 
-                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
-                // localStorage.setItem("longitude", longitude.toString());
+                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                localStorage.setItem("longitude", longitude.toString());
 
                 var data = {
                     uid: user.uid,
                     email: user.email,
                     username: user.username,
-                    // latitude: latitude.toString(),
-                    // longitude: longitude.toString(),
-                    latitude: latchar,
-                    longitude: longchar
+                    latitude: latitude.toString(),
+                    longitude: longitude.toString(),
+                    // latitude: latchar,
+                    // longitude: longchar
                 }
 
                 console.log("frontend call:- ", data);
@@ -275,11 +275,12 @@ class Login extends Component {
                                 var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.invitecode), 'Location-Sharing');
                                 localStorage.setItem("invitecode", invitecode.toString());
 
-                                var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
-                                localStorage.setItem("latitude", latitude.toString());
+                                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
+                                // localStorage.setItem("latitude", latitude.toString());
 
-                                var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
-                                localStorage.setItem("longitude", longitude.toString());
+                                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
+                                // localStorage.setItem("longitude", longitude.toString());
+
                                 if (window.location.pathname == '/') {
                                     this.props.history.push('/user');
                                 }

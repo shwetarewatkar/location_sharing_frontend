@@ -46,7 +46,7 @@ export default class Groups extends React.Component {
 
     componentDidMount() {
         this.getAllGroups();
-        // this.auth.authantication();
+        this.auth.authantication();
     }
 
     onChangeInviteCode(e) {
