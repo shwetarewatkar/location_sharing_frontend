@@ -57,10 +57,11 @@ export default class Registration extends Component {
         if (location) {
             location.getCurrentPosition((position) => {
                 this.setState({
-                    latitude: position.coords.latitude.toString(),
-                    longitude: position.coords.longitude.toString(),
+                    latitude: position.coords.longitude.toString(),
+                    longitude: position.coords.latitude.toString(),
                 })
-
+                console.log("latitude:- ", position.coords.latitude.toString());
+                console.log("longitude:- ", position.coords.longitude.toString());
             }, (error) => {
                 console.log("error from location:- ", error);
             })
@@ -260,8 +261,8 @@ export default class Registration extends Component {
                 var alllongchar = this.state.longitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
-                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
-                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
 
                 var data = {
                     keyword: "registration",
@@ -269,11 +270,14 @@ export default class Registration extends Component {
                     email: user.email,
                     username: this.state.username,
                     flage: false,
-                    latitude: latitude.toString(),
-                    longitude: longitude.toString(),
-                    // lat: latchar,
-                    // long: longchar
+                    // latitude: latitude.toString(),
+                    // longitude: longitude.toString(),
+                    latitude: latchar,
+                    longitude: longchar
                 }
+
+               
+                console.log(data);
 
                 this.services.postdata(data).then(res => {
 

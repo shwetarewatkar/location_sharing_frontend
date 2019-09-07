@@ -50,10 +50,10 @@ export default class Auth extends React.Component {
             uid: uid,
             email: email,
             username: username,
-            latitude: decryptedData_longitude,
-            longitude: decryptedData_latitude,
-            // latitude: latchar,
-            // longitude: longchar
+            // latitude: decryptedData_longitude,
+            // longitude: decryptedData_latitude,
+            latitude: longchar,
+            longitude: latchar
         }
 
         this.services.senddata('Auth', data);

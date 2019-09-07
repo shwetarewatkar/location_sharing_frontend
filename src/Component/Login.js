@@ -69,6 +69,7 @@ class Login extends Component {
         localStorage.removeItem("invitecode");
         localStorage.removeItem("latitude");
         localStorage.removeItem("longitude");
+        localStorage.removeItem("flage");
     }
 
     handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -87,10 +88,11 @@ class Login extends Component {
             this.setState({ showAlert: false })
             location.getCurrentPosition((position) => {
                 this.setState({
-                    latitude: position.coords.latitude.toString(),
-                    longitude: position.coords.longitude.toString(),
+                    latitude: position.coords.longitude.toString(),
+                    longitude: position.coords.latitude.toString(),
                 })
-
+                console.log("latitude:- ", position.coords.latitude.toString());
+                console.log("longitude:- ", position.coords.longitude.toString());
             }, (error) => {
                 this.setState({ showAlert: true });
             })
@@ -229,27 +231,28 @@ class Login extends Component {
 
                 var user = result.user;
 
-                var alllatchar = this.state.latitude.split('.');
+                var alllatchar = this.state.longitude.split('.');
                 var latchar = alllatchar[0] + "." + alllatchar[1].substring(0, 4);
 
-                var alllongchar = this.state.longitude.split('.');
+                var alllongchar = this.state.latitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
-                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
-                localStorage.setItem("latitude", latitude.toString());
-
-                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
-                localStorage.setItem("longitude", longitude.toString());
-
+                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                // localStorage.setItem("latitude", latitude.toString());
+                
+                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                // localStorage.setItem("longitude", longitude.toString());
+                
                 var data = {
                     uid: user.uid,
                     email: user.email,
                     username: user.username,
-                    latitude: latitude.toString(),
-                    longitude: longitude.toString(),
-                    // latitude: latchar,
-                    // longitude: longchar
+                    // latitude: latitude.toString(),
+                    // longitude: longitude.toString(),
+                    latitude: latchar,
+                    longitude: longchar
                 }
+
                 this.services.senddata('Auth', data);
                 this.services.getdata().subscribe((res) => {
 
@@ -270,11 +273,11 @@ class Login extends Component {
                                 var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.invitecode), 'Location-Sharing');
                                 localStorage.setItem("invitecode", invitecode.toString());
 
-                                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
-                                // localStorage.setItem("latitude", latitude.toString());
+                                var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
+                                localStorage.setItem("latitude", latitude.toString());
 
-                                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
-                                // localStorage.setItem("longitude", longitude.toString());
+                                var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
+                                localStorage.setItem("longitude", longitude.toString());
 
                                 this.props.history.push('/user');
 

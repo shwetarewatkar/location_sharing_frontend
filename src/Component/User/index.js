@@ -104,15 +104,16 @@ export default class User extends React.Component {
 
                                         res.data.forEach((items, i) => {
 
-                                            let decryptedData_lat = items.latitude;
-                                            var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                                            var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+                                            // let decryptedData_lat = items.latitude;
+                                            // var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                            // var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
 
-                                            let decryptedData_long = items.longitude;
-                                            var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                                            var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+                                            // let decryptedData_long = items.longitude;
+                                            // var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                            // var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
 
-                                            var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                                            // var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                                            var uluru = { lat: parseFloat(items.latitude), lng: parseFloat(items.longitude) };
                                             console.log(uluru);
                                             marker = new window.google.maps.Marker({
                                                 position: uluru,
@@ -159,17 +160,17 @@ export default class User extends React.Component {
 
                     res.data.forEach((item, i) => {
 
-                        // var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
+                        var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
+                        
+                        // let decryptedData_lat = item.latitude;
+                        // var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                        // var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
 
-                        let decryptedData_lat = item.latitude;
-                        var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                        var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+                        // let decryptedData_long = item.longitude;
+                        // var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                        // var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
 
-                        let decryptedData_long = item.longitude;
-                        var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                        var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
-
-                        var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                        // var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
 
                         marker = new window.google.maps.Marker({
                             position: uluru,
