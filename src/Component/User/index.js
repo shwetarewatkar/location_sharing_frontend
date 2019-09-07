@@ -97,25 +97,30 @@ export default class User extends React.Component {
             switch (res.event) {
                 case 'GroupMemberList':
 
-                    for (var i = 0; i < res.data.length; i++) {
+                    res.data.forEach((item, i) => {
 
-                        // let decryptedData_lat = res.data[i].latitude;
+                        var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
+
+                        // let decryptedData_lat = item.latitude;
                         // var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
                         // var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
 
-                        // let decryptedData_long = res.data[i].longitude;
+                        // let decryptedData_long = item.longitude;
                         // var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
                         // var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
 
-                        var uluru = { lat: parseFloat(res.data[i].latitude), lng: parseFloat(res.data[i].longitude) };
+                        // var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
 
                         marker = new window.google.maps.Marker({
                             position: uluru,
-                            map: map
+                            map: map,
+                            label: item.username,
                         })
 
                         markers.push(marker)
-                    }
+                    })
+
+
                     break;
             }
         });
@@ -180,17 +185,21 @@ export default class User extends React.Component {
 
         infoWindow = new window.google.maps.InfoWindow();
         if (navigator && navigator.geolocation) {
+
             navigator.geolocation.getCurrentPosition(function (position) {
                 pos = [position.coords.latitude, position.coords.longitude]
                 let centerpos = { "lat": position.coords.latitude, "lng": position.coords.longitude }
                 map.setCenter(centerpos);
 
-                // var locs = [["21.1702", "72.8311"], ["23.0225", "72.5714"], ["22.3072", "73.1812"]]
+                // var locs = [["21.2123578", "72.8397202"], ["23.0225", "72.5714"], ["22.3072", "73.1812"]]
+
                 // locs.forEach((item) => {
+
                 //     var uluru = { lat: parseFloat(item[0]), lng: parseFloat(item[1]) };
                 //     marker = new window.google.maps.Marker({
                 //         position: uluru,
-                //         map: map
+                //         map: map,
+                //         label: 'H'
                 //     })
 
                 //     markers.push(marker)
@@ -277,7 +286,7 @@ export default class User extends React.Component {
                                             </div>
                                             <div style={{ float: 'right' }}>
                                                 <select className="form-control" onChange={this.onChangeGroup}>
-                                                    <option value="">Select Group</option>
+                                                    {/* <option value="">Select Group</option> */}
                                                     {
                                                         this.state.groups ?
                                                             this.state.groups.map(function (obj, i) {

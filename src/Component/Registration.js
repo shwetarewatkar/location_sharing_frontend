@@ -107,13 +107,21 @@ export default class Registration extends Component {
             var alllongchar = this.state.longitude.split('.');
             var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
+            var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+            localStorage.setItem("latitude", latitude.toString());
+
+            var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+            localStorage.setItem("longitude", longitude.toString());
+
             var data = {
                 keyword: "googlelogin",
                 uid: user.uid,
                 email: user.email,
                 username: user.username,
-                lat: latchar,
-                long: longchar
+                latitude: latitude.toString(),
+                longitude: longitude.toString(),
+                // lat: latchar,
+                // long: longchar
             }
 
             this.services.postdata(data).then(res => {
@@ -132,11 +140,11 @@ export default class Registration extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
-                    var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
-                    localStorage.setItem("latitude", latitude.toString());
+                    // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
+                    // localStorage.setItem("latitude", latitude.toString());
 
-                    var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
-                    localStorage.setItem("longitude", longitude.toString());
+                    // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
+                    // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
                 } else {
@@ -154,11 +162,11 @@ export default class Registration extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
-                    var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
-                    localStorage.setItem("latitude", latitude.toString());
+                    // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
+                    // localStorage.setItem("latitude", latitude.toString());
 
-                    var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
-                    localStorage.setItem("longitude", longitude.toString());
+                    // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
+                    // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
                 }
@@ -245,13 +253,18 @@ export default class Registration extends Component {
                 var alllongchar = this.state.longitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
+                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+
                 var data = {
                     keyword: "registration",
                     uid: user.uid,
                     email: user.email,
                     username: this.state.username,
-                    lat: latchar,
-                    long: longchar
+                    latitude: latitude.toString(),
+                    longitude: longitude.toString(),
+                    // lat: latchar,
+                    // long: longchar
                 }
 
                 this.services.postdata(data).then(res => {

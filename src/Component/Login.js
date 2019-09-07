@@ -5,7 +5,9 @@ import Service from '../Services/service';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
-
+var map, marker, infoWindow, bounds;
+var pos = []
+var markers = [];
 
 class Login extends Component {
 
@@ -25,7 +27,8 @@ class Login extends Component {
             email: '',
             erremail: true,
             password: '',
-            errpass: true
+            errpass: true,
+            showAlert: false
         }
 
         var config = {
@@ -68,11 +71,20 @@ class Login extends Component {
         localStorage.removeItem("longitude");
     }
 
+    handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+    }
+
     getMyLocation() {
 
         const location = window.navigator && window.navigator.geolocation
 
         if (location) {
+            this.setState({ showAlert: false })
             location.getCurrentPosition((position) => {
                 this.setState({
                     latitude: position.coords.latitude.toString(),
@@ -80,8 +92,11 @@ class Login extends Component {
                 })
 
             }, (error) => {
-                console.log("error from location:- ", error);
+                this.setState({ showAlert: true });
             })
+        } else {
+            this.setState({ showAlert: true });
+            this.handleLocationError(false, infoWindow, map.getCenter());
         }
 
     }
@@ -101,13 +116,21 @@ class Login extends Component {
             var alllongchar = this.state.longitude.split('.');
             var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
+            var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+            localStorage.setItem("latitude", latitude.toString());
+
+            var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+            localStorage.setItem("longitude", longitude.toString());
+
             var data = {
                 keyword: "googlelogin",
                 uid: user.uid,
                 email: user.email,
                 username: user.username,
-                lat: latchar,
-                long: longchar
+                latitude: latitude.toString(),
+                longitude: longitude.toString(),
+                // lat: latchar,
+                // long: longchar
             }
 
             this.services.postdata(data).then(res => {
@@ -126,11 +149,11 @@ class Login extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
-                    var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
-                    localStorage.setItem("latitude", latitude.toString());
+                    // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
+                    // localStorage.setItem("latitude", latitude.toString());
 
-                    var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
-                    localStorage.setItem("longitude", longitude.toString());
+                    // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
+                    // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
                 } else {
@@ -148,11 +171,11 @@ class Login extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
-                    var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
-                    localStorage.setItem("latitude", latitude.toString());
+                    // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
+                    // localStorage.setItem("latitude", latitude.toString());
 
-                    var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
-                    localStorage.setItem("longitude", longitude.toString());
+                    // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].longitude), 'Location-Sharing');
+                    // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
                 }
@@ -205,22 +228,21 @@ class Login extends Component {
                 var alllongchar = this.state.longitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
-                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(latchar), 'Location-Sharing');
-                // localStorage.setItem("latitude", latitude.toString());
+                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                localStorage.setItem("latitude", latitude.toString());
 
-                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(longchar), 'Location-Sharing');
-                // localStorage.setItem("longitude", longitude.toString());
+                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                localStorage.setItem("longitude", longitude.toString());
 
                 var data = {
                     uid: user.uid,
                     email: user.email,
                     username: user.username,
-                    // latitude: latitude.toString(),
-                    // longitude: longitude.toString(),
-                    latitude: latchar,
-                    longitude: longchar
+                    latitude: latitude.toString(),
+                    longitude: longitude.toString(),
+                    // latitude: latchar,
+                    // longitude: longchar
                 }
-
                 this.services.senddata('Auth', data);
                 this.services.getdata().subscribe((res) => {
 
@@ -241,11 +263,11 @@ class Login extends Component {
                                 var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.invitecode), 'Location-Sharing');
                                 localStorage.setItem("invitecode", invitecode.toString());
 
-                                var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
-                                localStorage.setItem("latitude", latitude.toString());
+                                // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.latitude), 'Location-Sharing');
+                                // localStorage.setItem("latitude", latitude.toString());
 
-                                var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
-                                localStorage.setItem("longitude", longitude.toString());
+                                // var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
+                                // localStorage.setItem("longitude", longitude.toString());
 
                                 this.props.history.push('/user');
 
@@ -269,7 +291,21 @@ class Login extends Component {
 
     render() {
         return (
+
             <div className="container">
+
+                {
+                    this.state.showAlert === true ?
+                        <div className="alertNavigator">
+                            <div className="maErrorBlock">
+                                <i class="fas fa-exclamation-triangle" style={{color: 'rgb(234, 67, 53)', fontSize: '50px'}}></i>
+                                <h2>Please allow location permission</h2>
+                                <h2>from your site settings.</h2>
+                            </div>
+                        </div>
+                        :
+                        ''
+                }
 
                 <div className="row justify-content-center">
 

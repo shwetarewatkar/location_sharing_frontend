@@ -44,14 +44,11 @@ export default class Groups extends React.Component {
             removegroupmodelshow: false
         }
 
-
-
     }
 
     componentDidMount() {
-
-        this.auth.authantication();
         this.getAllGroups();
+        this.auth.authantication();
     }
 
     onChangeInviteCode(e) {
