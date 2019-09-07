@@ -272,8 +272,8 @@ export default class Registration extends Component {
                     flage: false,
                     // latitude: latitude.toString(),
                     // longitude: longitude.toString(),
-                    latitude: latchar,
-                    longitude: longchar
+                    latitude: longchar,
+                    longitude: latchar
                 }
 
                
