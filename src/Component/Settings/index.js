@@ -248,84 +248,100 @@ export default class Setting extends React.Component {
                                                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
                                                     {
                                                         (this.state.showforgot) ?
-                                                            <a className="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Change</a> : ''
+                                                            <span>
+                                                                <a className="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Change</a>
+                                                                <a className="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Account</a>
+                                                            </span>
+                                                            :
+                                                            <a className="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Account</a>
+
                                                     }
-                                                    <a className="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Account</a>
+
                                                 </div>
                                             </nav>
                                             <div className="tab-content" id="nav-tabContent">
 
                                                 {
                                                     (this.state.showforgot) ?
-                                                        <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                                            <div className="row">
-                                                                <div className="col-xl-3">
+                                                        <span>
+                                                            <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                                <div className="row">
+                                                                    <div className="col-xl-3">
 
-                                                                    {
-                                                                        (this.state.showbtn) ?
+                                                                        {
+                                                                            (this.state.showbtn) ?
 
-                                                                            <form className="user" onSubmit={this.onChangeSubmit}>
-                                                                                <br />
+                                                                                <form className="user" onSubmit={this.onChangeSubmit}>
+                                                                                    <br />
 
-                                                                                <div className="form-group">
-                                                                                    <label>Password</label>
-                                                                                    {
-                                                                                        (this.state.errpass) ?
-                                                                                            <input type="password" value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
-                                                                                            :
-                                                                                            <input type="password" style={{ border: '1px solid red' }} value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
-                                                                                    }
+                                                                                    <div className="form-group">
+                                                                                        <label>Password</label>
+                                                                                        {
+                                                                                            (this.state.errpass) ?
+                                                                                                <input type="password" value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
+                                                                                                :
+                                                                                                <input type="password" style={{ border: '1px solid red' }} value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
+                                                                                        }
 
-                                                                                </div>
-                                                                                <div className="form-group">
-                                                                                    <label>Confirm Password</label>
-                                                                                    {
-                                                                                        (this.state.errrepass) ?
-                                                                                            <input type="password" value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
-                                                                                            :
+                                                                                    </div>
+                                                                                    <div className="form-group">
+                                                                                        <label>Confirm Password</label>
+                                                                                        {
+                                                                                            (this.state.errrepass) ?
+                                                                                                <input type="password" value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
+                                                                                                :
 
-                                                                                            <input type="password" style={{ border: '1px solid red' }} value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
-                                                                                    }
+                                                                                                <input type="password" style={{ border: '1px solid red' }} value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
+                                                                                        }
 
-                                                                                </div>
-                                                                                <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
-                                                                                    Done
+                                                                                    </div>
+                                                                                    <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
+                                                                                        Done
                                                                         </button>
-                                                                            </form>
-                                                                            :
-                                                                            <form className="user" onSubmit={this.onSubmit}>
-                                                                                <br />
-                                                                                <div className="form-group">
-                                                                                    <label>Email Address</label>
-                                                                                    {
-                                                                                        (this.state.erremail) ?
-                                                                                            <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
-                                                                                            :
-                                                                                            <input type="email" style={{ border: '1px solid red' }} value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
-                                                                                    }
+                                                                                </form>
+                                                                                :
+                                                                                <form className="user" onSubmit={this.onSubmit}>
+                                                                                    <br />
+                                                                                    <div className="form-group">
+                                                                                        <label>Email Address</label>
+                                                                                        {
+                                                                                            (this.state.erremail) ?
+                                                                                                <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                                                                :
+                                                                                                <input type="email" style={{ border: '1px solid red' }} value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                                                        }
 
-                                                                                </div>
-                                                                                <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
-                                                                                    Confirm
+                                                                                    </div>
+                                                                                    <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
+                                                                                        Confirm
                                                                         </button>
-                                                                            </form>
-                                                                    }
+                                                                                </form>
+                                                                        }
 
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                            <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                                                <div className="col-xl-3">
+                                                                    <form className="user" >
+                                                                        <br />
+                                                                        <button type="button" onClick={this.onDeleteAccountPop} className="btn btn-danger">Delete Account</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </span>
                                                         :
-                                                        ''
+                                                        <div className="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                                            <div className="col-xl-3">
+                                                                <form className="user" >
+                                                                    <br />
+                                                                    <button type="button" onClick={this.onDeleteAccountPop} className="btn btn-danger">Delete Account</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                 }
 
-                                                <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                                    <div className="col-xl-3">
-                                                        <form className="user" >
-                                                            <br />
-                                                            <button type="button" onClick={this.onDeleteAccountPop} className="btn btn-danger">Delete Account</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

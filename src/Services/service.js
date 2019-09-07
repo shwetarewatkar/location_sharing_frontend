@@ -32,6 +32,7 @@ export default class Service extends Component {
     }
 
     senddata(e, Data) {
+        console.log("req--->",{ event: e, data: Data })
         return socket.emit('req', { event: e, data: Data });
     }
 

@@ -56,7 +56,7 @@ export default class Sidebar extends React.Component {
                 <li className="nav-item">
                     <Link className="nav-link" to={'/'}>
                         <i className="fas fa-sign-out-alt"></i>
-                        <span> Signout</span>
+                        <span> Logout</span>
                     </Link>
                 </li>
 

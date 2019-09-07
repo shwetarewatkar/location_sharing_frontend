@@ -13,19 +13,6 @@ export default class Groups extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.services = new Service();
-        this.auth = new Auth();
-        this.onChangeInviteCode = this.onChangeInviteCode.bind(this);
-        this.onJoinSubmit = this.onJoinSubmit.bind(this);
-        this.onGroupSubmit = this.onGroupSubmit.bind(this);
-        this.onChangeGroupName = this.onChangeGroupName.bind(this);
-        this.delgroupdata = this.delgroupdata.bind(this);
-        this.onCloseModel = this.onCloseModel.bind(this);
-        this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
-        this.onAddNewGroup = this.onAddNewGroup.bind(this);
-        this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
-
         this.state = {
             groups: [],
             members: [],
@@ -44,11 +31,22 @@ export default class Groups extends React.Component {
             removegroupmodelshow: false
         }
 
+        this.services = new Service();
+        this.auth = new Auth();
+        this.onChangeInviteCode = this.onChangeInviteCode.bind(this);
+        this.onJoinSubmit = this.onJoinSubmit.bind(this);
+        this.onGroupSubmit = this.onGroupSubmit.bind(this);
+        this.onChangeGroupName = this.onChangeGroupName.bind(this);
+        this.delgroupdata = this.delgroupdata.bind(this);
+        this.onCloseModel = this.onCloseModel.bind(this);
+        this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
+        this.onAddNewGroup = this.onAddNewGroup.bind(this);
+        this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
     }
 
     componentDidMount() {
         this.getAllGroups();
-        this.auth.authantication();
+        // this.auth.authantication();
     }
 
     onChangeInviteCode(e) {

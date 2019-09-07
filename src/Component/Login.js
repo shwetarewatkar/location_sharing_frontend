@@ -239,10 +239,10 @@ class Login extends Component {
 
                 // var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
                 // localStorage.setItem("latitude", latitude.toString());
-                
+
                 // var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
                 // localStorage.setItem("longitude", longitude.toString());
-                
+
                 var data = {
                     uid: user.uid,
                     email: user.email,
@@ -252,6 +252,8 @@ class Login extends Component {
                     latitude: latchar,
                     longitude: longchar
                 }
+
+                console.log("frontend call:- ", data);
 
                 this.services.senddata('Auth', data);
                 this.services.getdata().subscribe((res) => {
@@ -278,8 +280,9 @@ class Login extends Component {
 
                                 var longitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.user_details.longitude), 'Location-Sharing');
                                 localStorage.setItem("longitude", longitude.toString());
-
-                                this.props.history.push('/user');
+                                if (window.location.pathname == '/') {
+                                    this.props.history.push('/user');
+                                }
 
                             } else {
                                 alertify.error("User does not exist!");

@@ -27,7 +27,7 @@ export default class People extends React.Component {
             removeid: ''
         };
 
-        this.auth.authantication();
+        // this.auth.authantication();
 
     }
 

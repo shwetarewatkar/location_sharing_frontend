@@ -73,11 +73,27 @@ export default class Forgot extends Component {
 
         if (this.state.erremail == true) {
 
-            user.sendEmailVerification().then(() => {
-                this.props.history.push('/forgot');
-            }).catch(function (error) {
-                console.log(error);
-            });
+            var data = {
+                email: this.state.email
+            }
+            
+            // this.services.senddata('CheckUserByEmail', data);
+            // this.services.getdata().subscribe((res) => {
+
+            //     switch (res.event) {
+            //         case 'EmailExsists':
+
+            //             break;
+            //     }
+            // });
+
+            // user.sendEmailVerification().then(() => {
+            //     // this.props.history.push('/forgot');
+            //     console.log("inside yes");
+            // }).catch(function (error) {
+            //     // console.log("inside yes");
+            //     alertify.error(error.message);
+            // });
 
         }
 

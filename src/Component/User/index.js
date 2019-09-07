@@ -118,7 +118,9 @@ export default class User extends React.Component {
                                             marker = new window.google.maps.Marker({
                                                 position: uluru,
                                                 map: map,
-                                                label: items.username,
+                                                // label: items.username,
+                                                label: items.username[i++ % items.username.length],
+                                                title: items.username
                                             })
 
                                             markers.push(marker)
@@ -161,7 +163,7 @@ export default class User extends React.Component {
                     res.data.forEach((item, i) => {
 
                         var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
-                        
+
                         // let decryptedData_lat = item.latitude;
                         // var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
                         // var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
