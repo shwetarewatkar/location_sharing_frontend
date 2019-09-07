@@ -26,6 +26,7 @@ export default class User extends React.Component {
         this.onChangeGroup = this.onChangeGroup.bind(this);
         this.onChangeInvite = this.onChangeInvite.bind(this);
         this.onAddDefault = this.onAddDefault.bind(this);
+        this.defaultLocData = this.defaultLocData.bind(this);
 
         this.state = {
             map: {},
@@ -34,7 +35,8 @@ export default class User extends React.Component {
             members: [],
             latlong: [],
             invite: '',
-            errinvite: true
+            errinvite: true,
+            a: ''
         }
 
     }
@@ -49,6 +51,7 @@ export default class User extends React.Component {
             });
             bounds = new window.google.maps.LatLngBounds();
             this.getAllLocations()
+            this.defaultLocData()
         }, 1000)
 
         let decryptedData_code = localStorage.getItem('invitecode');
@@ -76,6 +79,63 @@ export default class User extends React.Component {
                     break;
             }
         });
+
+    }
+
+    defaultLocData() {
+
+        this.services.senddata('GetGroupsList', '');
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'GroupList':
+
+                    res.data.forEach((item, i) => {
+
+                        if (item.default) {
+                            var data = {
+                                uid: this.state.uid,
+                                GroupId: item._id
+                            }
+
+                            this.services.senddata('GetMemeberList', data);
+                            this.services.getdata().subscribe((res) => {
+                                switch (res.event) {
+                                    case 'GroupMemberList':
+
+                                        res.data.forEach((items, i) => {
+
+                                            let decryptedData_lat = items.latitude;
+                                            var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                            var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                                            let decryptedData_long = items.longitude;
+                                            var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                            var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                                            var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                                            console.log(uluru);
+                                            marker = new window.google.maps.Marker({
+                                                position: uluru,
+                                                map: map,
+                                                label: items.username,
+                                            })
+
+                                            markers.push(marker)
+                                        })
+
+
+                                        break;
+                                }
+                            });
+                        }
+
+                    })
+
+
+                    break;
+            }
+        });
+
 
     }
 
@@ -182,6 +242,7 @@ export default class User extends React.Component {
     getAllLocations() {
 
         // let self = this
+
 
         infoWindow = new window.google.maps.InfoWindow();
         if (navigator && navigator.geolocation) {

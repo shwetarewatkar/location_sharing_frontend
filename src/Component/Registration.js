@@ -118,6 +118,7 @@ export default class Registration extends Component {
                 uid: user.uid,
                 email: user.email,
                 username: user.username,
+                flage: true,
                 latitude: latitude.toString(),
                 longitude: longitude.toString(),
                 // lat: latchar,
@@ -140,6 +141,9 @@ export default class Registration extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
+                    var flage = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].flage), 'Location-Sharing');
+                    localStorage.setItem("flage", flage.toString());
+
                     // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
                     // localStorage.setItem("latitude", latitude.toString());
 
@@ -161,6 +165,9 @@ export default class Registration extends Component {
 
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
+
+                    var flage = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].flage), 'Location-Sharing');
+                    localStorage.setItem("flage", flage.toString());
 
                     // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
                     // localStorage.setItem("latitude", latitude.toString());
@@ -261,6 +268,7 @@ export default class Registration extends Component {
                     uid: user.uid,
                     email: user.email,
                     username: this.state.username,
+                    flage: false,
                     latitude: latitude.toString(),
                     longitude: longitude.toString(),
                     // lat: latchar,

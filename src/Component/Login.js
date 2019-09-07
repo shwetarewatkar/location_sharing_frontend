@@ -127,6 +127,7 @@ class Login extends Component {
                 uid: user.uid,
                 email: user.email,
                 username: user.username,
+                flage: true,
                 latitude: latitude.toString(),
                 longitude: longitude.toString(),
                 // lat: latchar,
@@ -149,6 +150,9 @@ class Login extends Component {
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
 
+                    var flage = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].flage), 'Location-Sharing');
+                    localStorage.setItem("flage", flage.toString());
+
                     // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
                     // localStorage.setItem("latitude", latitude.toString());
 
@@ -170,6 +174,9 @@ class Login extends Component {
 
                     var invitecode = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].invitecode), 'Location-Sharing');
                     localStorage.setItem("invitecode", invitecode.toString());
+
+                    var flage = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].flage), 'Location-Sharing');
+                    localStorage.setItem("flage", flage.toString());
 
                     // var latitude = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].latitude), 'Location-Sharing');
                     // localStorage.setItem("latitude", latitude.toString());
@@ -298,7 +305,7 @@ class Login extends Component {
                     this.state.showAlert === true ?
                         <div className="alertNavigator">
                             <div className="maErrorBlock">
-                                <i class="fas fa-exclamation-triangle" style={{color: 'rgb(234, 67, 53)', fontSize: '50px'}}></i>
+                                <i class="fas fa-exclamation-triangle" style={{ color: 'rgb(234, 67, 53)', fontSize: '50px' }}></i>
                                 <h2>Please allow location permission</h2>
                                 <h2>from your site settings.</h2>
                             </div>
