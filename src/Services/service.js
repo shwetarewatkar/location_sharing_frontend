@@ -10,29 +10,12 @@ export default class Service extends Component {
     apiURL = "https://new-dev.artoon.in:6029";
     
     domail = "http://ls.artoon.in/invite?id=";
-
-    // getdatabyid(id) {
-    //     return axios.get(`${this.apiURL}/location/getid/` + id);
-    // }
-
-    // getgroupmemberbyid(id) {
-    //     return axios.get(`${this.apiURL}/location/getmemberid/` + id);
-    // }
-
-    // putdata(data) {
-    //     return axios.put(`${this.apiURL}/location/update`, data);
-    // }
-
-    // deletedata(data) {
-    //     return axios.delete(`${this.apiURL}/location/delete/` + data);
-    // }
-
+    
     postdata(data) {
         return axios.post(`${this.apiURL}/location/add`, data);
     }
 
     senddata(e, Data) {
-        console.log("req--->",{ event: e, data: Data })
         return socket.emit('req', { event: e, data: Data });
     }
 

@@ -48,6 +48,21 @@ class Login extends Component {
     componentDidMount() {
         this.getMyLocation();
         this.removeLocalstorage();
+
+        // var locs = [["U2FsdGVkX1/QOkkRU8V25Rql8FQAnvkO5IX9Y8dx9yg=", "U2FsdGVkX19GEbyVrXb1OTN3XIEdNbUxUtlnMvhydUw="], 
+        //    ["U2FsdGVkX1/Tld9GTh3umf/VGgCbpn+xrfh/QmD0wdg=", "U2FsdGVkX1+545QUuZ2ES5/tCwL0xd7HYWK4kMbXYpg="], 
+        //    ["U2FsdGVkX19IR/Lnbk7i3Sn1ZiOlifngrVQyOMDDDp0=", "U2FsdGVkX1+v13xzp1mLaBROstTJInJ/Lk+dt2+2Jtc="],
+        //    ["U2FsdGVkX1+mwdcukmNbe/k1Ktr2LnTHiz0qrjfhdPU=","U2FsdGVkX19jj9K2WRMuL2c7CRcKL55rPVCFf2+57DU="],
+        //     ["U2FsdGVkX19IR/Lnbk7i3Sn1ZiOlifngrVQyOMDDDp0=", "U2FsdGVkX1+v13xzp1mLaBROstTJInJ/Lk+dt2+2Jtc="],
+        //     ["U2FsdGVkX19ElrxspeakJCeVbbtjwIL8g2NSdu8lYNM=", "U2FsdGVkX1+ahw9Ssw4cCgsY/toUibRN8uJQoGgmwD4="]];
+
+        // var lt = "21.2057";
+        // var ln = "72.8884";
+        // var latitude = CryptoJS.AES.encrypt(JSON.stringify(lt), 'Location-Sharing');
+        // var longitude = CryptoJS.AES.encrypt(JSON.stringify(ln), 'Location-Sharing');
+        // console.log("latitude new user:- ", latitude.toString());
+        // console.log("longitude new user:- ", longitude.toString());
+
     }
 
     onChangeEmail(e) {
@@ -128,13 +143,15 @@ class Login extends Component {
                 keyword: "googlelogin",
                 uid: user.uid,
                 email: user.email,
-                username: user.username,
+                username: user.displayName,
                 flage: true,
                 latitude: latitude.toString(),
                 longitude: longitude.toString(),
                 // lat: latchar,
                 // long: longchar
             }
+
+
 
             this.services.postdata(data).then(res => {
                 if (res.data.status) {
@@ -162,7 +179,9 @@ class Login extends Component {
                     // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
+
                 } else {
+
                     alertify.success(res.data.message);
 
                     var uid = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].uid), 'Location-Sharing');

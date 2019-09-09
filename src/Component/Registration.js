@@ -118,7 +118,7 @@ export default class Registration extends Component {
                 keyword: "googlelogin",
                 uid: user.uid,
                 email: user.email,
-                username: user.username,
+                username: user.displayName,
                 flage: true,
                 latitude: longitude.toString(),
                 longitude: latitude.toString(),
@@ -152,7 +152,9 @@ export default class Registration extends Component {
                     // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
+
                 } else {
+
                     alertify.success(res.data.message);
 
                     var uid = CryptoJS.AES.encrypt(JSON.stringify(res.data.userdata[0].uid), 'Location-Sharing');
@@ -177,6 +179,7 @@ export default class Registration extends Component {
                     // localStorage.setItem("longitude", longitude.toString());
 
                     this.props.history.push('/user');
+
                 }
             });
 
@@ -275,9 +278,6 @@ export default class Registration extends Component {
                     // latitude: longchar,
                     // longitude: latchar
                 }
-
-               
-                console.log(data);
 
                 this.services.postdata(data).then(res => {
 

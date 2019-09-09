@@ -42,11 +42,14 @@ export default class Groups extends React.Component {
         this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
         this.onAddNewGroup = this.onAddNewGroup.bind(this);
         this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
+
+        this.auth.authantication();
+        
     }
 
     componentDidMount() {
         this.getAllGroups();
-        this.auth.authantication();
+
     }
 
     onChangeInviteCode(e) {

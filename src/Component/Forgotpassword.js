@@ -74,26 +74,37 @@ export default class Forgot extends Component {
         if (this.state.erremail == true) {
 
             var data = {
+                uid: "",
                 email: this.state.email
             }
-            
-            // this.services.senddata('CheckUserByEmail', data);
-            // this.services.getdata().subscribe((res) => {
 
-            //     switch (res.event) {
-            //         case 'EmailExsists':
+            this.services.senddata('CheckUserByEmail', data);
+            this.services.getdata().subscribe((res) => {
 
-            //             break;
-            //     }
-            // });
+                switch (res.event) {
+                    case 'EmailExsists':
 
-            // user.sendEmailVerification().then(() => {
-            //     // this.props.history.push('/forgot');
-            //     console.log("inside yes");
-            // }).catch(function (error) {
-            //     // console.log("inside yes");
-            //     alertify.error(error.message);
-            // });
+                        if (res.data.Exists) {
+                            user.sendEmailVerification().then(() => {
+
+                                alertify.success("Please check your mail and verify link");
+                                this.props.history.push('/forgot');
+
+                            }).catch(function (error) {
+
+                                alertify.error(error.message);
+
+                            });
+
+                        } else {
+                            alertify.error("Email is not exist");
+                        }
+
+                        break;
+                }
+            });
+
+
 
         }
 

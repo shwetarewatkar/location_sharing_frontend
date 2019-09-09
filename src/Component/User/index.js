@@ -62,7 +62,6 @@ export default class User extends React.Component {
         var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
         var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
 
-        // console.log();
 
         this.setState({
             sharelink: this.auth.services.domail + code,
@@ -116,12 +115,11 @@ export default class User extends React.Component {
 
                                             var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
 
-                                            console.log(uluru);
                                             marker = new window.google.maps.Marker({
                                                 position: uluru,
                                                 map: map,
                                                 // label: items.username,
-                                                label: items.username[i++ % items.username.length],
+                                                label: items.username[0 % items.username.length],
                                                 title: items.username
                                             })
 
@@ -152,6 +150,11 @@ export default class User extends React.Component {
 
     onChangeGroup(e) {
 
+
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+
         var data = {
             uid: this.state.uid,
             GroupId: e.target.value
@@ -179,12 +182,12 @@ export default class User extends React.Component {
                         marker = new window.google.maps.Marker({
                             position: uluru,
                             map: map,
-                            label: item.username,
+                            label: item.username[0 % item.username.length],
+                            title: item.username
                         })
 
                         markers.push(marker)
                     })
-
 
                     break;
             }
@@ -257,7 +260,7 @@ export default class User extends React.Component {
                 let centerpos = { "lat": position.coords.latitude, "lng": position.coords.longitude }
                 map.setCenter(centerpos);
 
-                // var locs = [["21.2123578", "72.8397202"], ["23.0225", "72.5714"], ["22.3072", "73.1812"]]
+                // var locs = [["21.2111", "72.8630"], ["21.1418", "72.7709"], ["21.2300", "72.9009"]]
 
                 // locs.forEach((item) => {
 
