@@ -8,7 +8,7 @@ const socket = socketIOClient("https://new-dev.artoon.in:6030");
 export default class Service extends Component {
 
     apiURL = "https://new-dev.artoon.in:6029";
-    
+
     domail = "http://ls.artoon.in/invite?id=";
 
     postdata(data) {
@@ -16,6 +16,7 @@ export default class Service extends Component {
     }
 
     senddata(e, Data) {
+
         return socket.emit('req', { event: e, data: Data });
     }
 

@@ -12,6 +12,7 @@ import CryptoJS from 'crypto-js';
 var map, marker, infoWindow, bounds;
 var pos = []
 var markers = [];
+var updatelocation = [];
 
 export default class User extends React.Component {
 
@@ -36,8 +37,18 @@ export default class User extends React.Component {
             latlong: [],
             invite: '',
             errinvite: true,
-            a: ''
+            a: '',
+            showMenu: true
         }
+
+        // updatelocation = [];
+        // this.services.getdata().subscribe((res) => {
+        //     switch (res.event) {
+        //         case 'UserLocationUpdate':
+        //             updatelocation.push(res.data);
+        //             break;
+        //     }
+        // });
 
     }
 
@@ -101,9 +112,53 @@ export default class User extends React.Component {
                                 switch (res.event) {
                                     case 'GroupMemberList':
 
-                                        res.data.forEach((items, i) => {
+                                        res.data.forEach((items, ii) => {
 
-                                            // var uluru = { lat: parseFloat(items.latitude), lng: parseFloat(items.longitude) };
+                                            // if (items.uid == updatelocation[0].uid) {
+
+                                            //     let decryptedData_lat = updatelocation[0].latitude;
+                                            //     var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                            //     var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                                            //     let decryptedData_long = updatelocation[0].longitude;
+                                            //     var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                            //     var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                                            //     var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+
+                                            //     console.log("update location:- ", uluru);
+
+                                            //     marker = new window.google.maps.Marker({
+                                            //         position: uluru,
+                                            //         map: map,
+                                            //         // label: items.username,
+                                            //         label: items.username[0 % items.username.length],
+                                            //         title: items.username
+                                            //     })
+
+                                            //     markers.push(marker)
+
+                                            // } else {
+                                            //     let decryptedData_lat = items.latitude;
+                                            //     var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                            //     var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                                            //     let decryptedData_long = items.longitude;
+                                            //     var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                            //     var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                                            //     var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+
+                                            //     marker = new window.google.maps.Marker({
+                                            //         position: uluru,
+                                            //         map: map,
+                                            //         // label: items.username,
+                                            //         label: items.username[0 % items.username.length],
+                                            //         title: items.username
+                                            //     })
+
+                                            //     markers.push(marker)
+                                            // }
 
                                             let decryptedData_lat = items.latitude;
                                             var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
@@ -124,6 +179,11 @@ export default class User extends React.Component {
                                             })
 
                                             markers.push(marker)
+
+
+                                            // var uluru = { lat: parseFloat(items.latitude), lng: parseFloat(items.longitude) };
+
+
                                         })
 
 
@@ -227,11 +287,13 @@ export default class User extends React.Component {
             this.services.getdata().subscribe((res) => {
                 switch (res.event) {
                     case 'AddDefaultMemebrResp':
+
                         if (res.data.status == true) {
                             alertify.success(res.data.message);
                         } else {
                             alertify.error(res.data.message);
                         }
+                        
                         break;
                 }
             });
@@ -284,7 +346,6 @@ export default class User extends React.Component {
             this.handleLocationError(false, infoWindow, map.getCenter());
         }
     }
-
 
     render() {
 

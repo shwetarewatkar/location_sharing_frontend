@@ -38,11 +38,17 @@ export default class Navigation extends React.Component {
 
             <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+
+                <button className="btn btn-link d-md-none rounded-circle mr-3" type="button" data-toggle="collapse" data-target="#accordionSidebar" aria-controls="#accordionSidebar" aria-expanded="false" aria-label="Toggle navigation">
+                    <i className="fa fa-bars"></i>
+                </button>
+
                 <ul className="navbar-nav ml-auto">
 
                     <li className="nav-item">
-                        <Link className="nav-link" to={'/user'}>
-                            <span className="mr-2 d-none d-lg-inline text-gray-600 small"> Hello, {this.state.username}</span>
+                        <Link className="nav-link" to={'/user'} style={{ fontSize: '80%', fontWeight: '400', color: '#858796' }}>
+                            Hello, {this.state.username}
+                            &nbsp;&nbsp;
                             <img className="img-profile rounded-circle" src="img/user.png" />
                         </Link>
                     </li>

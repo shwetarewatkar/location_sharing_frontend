@@ -56,8 +56,8 @@ class Login extends Component {
         //     ["U2FsdGVkX19IR/Lnbk7i3Sn1ZiOlifngrVQyOMDDDp0=", "U2FsdGVkX1+v13xzp1mLaBROstTJInJ/Lk+dt2+2Jtc="],
         //     ["U2FsdGVkX19ElrxspeakJCeVbbtjwIL8g2NSdu8lYNM=", "U2FsdGVkX1+ahw9Ssw4cCgsY/toUibRN8uJQoGgmwD4="]];
 
-        // var lt = "21.2057";
-        // var ln = "72.8884";
+        // var lt = "20.5786";
+        // var ln = "73.7507";
         // var latitude = CryptoJS.AES.encrypt(JSON.stringify(lt), 'Location-Sharing');
         // var longitude = CryptoJS.AES.encrypt(JSON.stringify(ln), 'Location-Sharing');
         // console.log("latitude new user:- ", latitude.toString());
@@ -376,10 +376,10 @@ class Login extends Component {
                                                 </button>
                                                 <br />
                                                 <div className="row">
-                                                    <div className="col-md-6 text-left">
+                                                    <div className="col-md-6 col-xs-12" style={{ textAlign: 'center' }}>
                                                         <Link className="small" to={'/registration'}>Create an Account!</Link>
                                                     </div>
-                                                    <div className="col-md-6 text-right">
+                                                    <div className="col-md-6 col-xs-12" style={{ textAlign: 'center' }}>
                                                         <Link className="small" to={'/confirm'}>Forgot Password</Link>
                                                     </div>
                                                 </div>
