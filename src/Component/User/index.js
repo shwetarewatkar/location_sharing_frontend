@@ -20,6 +20,8 @@ export default class User extends React.Component {
         super(props);
 
 
+        
+
         this.services = new Service();
         this.auth = new Auth();
 
