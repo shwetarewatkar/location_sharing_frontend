@@ -10,7 +10,7 @@ export default class Service extends Component {
     apiURL = "https://new-dev.artoon.in:6029";
     
     domail = "http://ls.artoon.in/invite?id=";
-    
+
     postdata(data) {
         return axios.post(`${this.apiURL}/location/add`, data);
     }
@@ -28,3 +28,4 @@ export default class Service extends Component {
     }
 
 }
+
