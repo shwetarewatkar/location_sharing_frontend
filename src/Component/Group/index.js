@@ -108,6 +108,8 @@ export default class Groups extends React.Component {
 
             //             alertify.success("Join Successfully");
 
+            //             console.log(res.data);
+
             //             break;
             //     }
             // });
@@ -427,14 +429,14 @@ export default class Groups extends React.Component {
                                         this.state.members.map(function (obj, i) {
                                             return (
                                                 <div className="row mymargin" key={i}>
-                                                    <div className="col-xl-10">
+                                                    <div className="col-xl-10 col-9">
                                                         {
                                                             (obj.uid == this.state.uid) ?
                                                                 <span>You</span> :
                                                                 <span>{obj.username}</span>
                                                         }
                                                     </div>
-                                                    <div className="col-xl-2">
+                                                    <div className="col-xl-2 col-3 text-right">
                                                         {
                                                             (obj.uid == this.state.uid) ?
                                                                 '' :

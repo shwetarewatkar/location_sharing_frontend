@@ -24,10 +24,13 @@ export default class People extends React.Component {
             peoples: [],
             uid: '',
             removemodelshow: false,
-            removeid: ''
+            removeid: '',
+            defaultdata: []
         };
 
         this.auth.authantication();
+
+
 
     }
 
@@ -47,25 +50,65 @@ export default class People extends React.Component {
 
     getAllPeople(userid) {
 
-        var data = {
-            uid: userid
-        }
-
-        this.services.senddata('GetPeopleList', data);
+        this.services.senddata('GetGroupsList', '');
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
+                case 'GroupList':
 
-                case 'PeopleList':
-                    this.setState({
-                        peoples: res.data,
-                        removeid: '',
-                        removemodelshow: false
-                    })
-                    this.state.removemodelshow = false;
+                    res.data.forEach((item, i) => {
+
+                        if (item.default) {
+
+                            var data = {
+                                uid: this.state.uid,
+                                GroupId: item._id
+                            }
+                            this.services.senddata('GetMemeberList', data);
+                            this.services.getdata().subscribe((res) => {
+                                switch (res.event) {
+                                    case 'GroupMemberList':
+
+                                        if (this.state.uid != res.data[i].uid) {
+                                            this.setState({
+                                                defaultdata: res.data,
+                                                removeid: '',
+                                                removemodelshow: false
+                                            })
+                                            this.state.removemodelshow = false;
+                                        }
+
+                                        break;
+                                }
+                            });
+
+                        }
+
+
+                    });
 
                     break;
             }
         });
+
+        // var data = {
+        //     uid: userid
+        // }
+
+        // this.services.senddata('GetPeopleList', data);
+        // this.services.getdata().subscribe((res) => {
+        //     switch (res.event) {
+
+        //         case 'PeopleList':
+        //             this.setState({
+        //                 peoples: res.data,
+        //                 removeid: '',
+        //                 removemodelshow: false
+        //             })
+        //             this.state.removemodelshow = false;
+
+        //             break;
+        //     }
+        // });
     }
 
     onRemove(id) {
@@ -75,8 +118,6 @@ export default class People extends React.Component {
             removeid: id
         })
         this.state.removemodelshow = true;
-
-
 
     }
 
@@ -89,8 +130,54 @@ export default class People extends React.Component {
         }
 
         this.services.senddata('RemovePeople', data);
+        this.setState({
+            removeid: '',
+            removemodelshow: false
+        })
+        this.state.removemodelshow = false;
+
         alertify.success("Deleted Successfully");
-        
+
+        this.services.senddata('GetGroupsList', '');
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'GroupList':
+
+                    res.data.forEach((item, i) => {
+
+                        if (item.default) {
+
+                            var data = {
+                                uid: this.state.uid,
+                                GroupId: item._id
+                            }
+                            this.services.senddata('GetMemeberList', data);
+                            this.services.getdata().subscribe((res) => {
+                                switch (res.event) {
+                                    case 'GroupMemberList':
+
+                                        if (this.state.uid != res.data[i].uid) {
+                                            this.setState({
+                                                defaultdata: res.data,
+                                                removeid: '',
+                                                removemodelshow: false
+                                            })
+                                            this.state.removemodelshow = false;
+                                        }
+
+                                        break;
+                                }
+                            });
+
+                        }
+
+
+                    });
+
+                    break;
+            }
+        });
+
         // this.services.getdata().subscribe((res) => {
         //     switch (res.event) {
         //         case 'PeopleList':
@@ -142,16 +229,28 @@ export default class People extends React.Component {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {this.state.peoples ?
-                                                            this.state.peoples.map(function (obj, i) {
+                                                        {this.state.defaultdata ?
+                                                            this.state.defaultdata.map(function (obj, i) {
                                                                 return (
                                                                     <tr key={i}>
-                                                                        <td>{obj.username}</td>
-                                                                        <td>
-                                                                            <span onClick={this.onRemove.bind(this, obj.uid)} className="btn btn-danger btn-hover">
-                                                                                <i className="fas fa-times"></i>
-                                                                            </span>
-                                                                        </td>
+                                                                        {
+                                                                            (this.state.uid == obj.uid) ?
+                                                                                ''
+                                                                                :
+                                                                                <td>{obj.username}</td>
+                                                                        }
+
+
+                                                                        {
+                                                                            (this.state.uid == obj.uid) ?
+                                                                                ''
+                                                                                : <td>
+                                                                                    <span onClick={this.onRemove.bind(this, obj.uid)} className="btn btn-danger btn-hover">
+                                                                                        <i className="fas fa-times"></i>
+                                                                                    </span></td>
+                                                                        }
+
+
                                                                     </tr>
                                                                 )
                                                             }, this)

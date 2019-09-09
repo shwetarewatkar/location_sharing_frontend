@@ -388,7 +388,7 @@ export default class User extends React.Component {
                                                         </div>
                                                     </form>
                                                 </div>
-                                                <div className="col-xl-3">
+                                                <div className="col-xl-4">
                                                     <label>Share With Friends Url</label>
                                                     <div className="input-group">
                                                         <input type="text" value={this.state.sharelink} onChange={this.onChangeShareLink} className="form-control" placeholder="Invite Your Friends" />

@@ -9,13 +9,15 @@ export default class Service extends Component {
 
     apiURL = "https://new-dev.artoon.in:6029";
 
-    domail = "http://ls.artoon.in/invite?id=";
+    domail = "https://ls.artoon.in/invite?id=";
 
     postdata(data) {
         return axios.post(`${this.apiURL}/location/add`, data);
     }
 
     senddata(e, Data) {
+
+        console.log("req:- ", { event: e, data: Data });
 
         return socket.emit('req', { event: e, data: Data });
     }

@@ -38,7 +38,6 @@ export default class Navigation extends React.Component {
 
             <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-
                 <button className="btn btn-link d-md-none rounded-circle mr-3" type="button" data-toggle="collapse" data-target="#accordionSidebar" aria-controls="#accordionSidebar" aria-expanded="false" aria-label="Toggle navigation">
                     <i className="fa fa-bars"></i>
                 </button>
