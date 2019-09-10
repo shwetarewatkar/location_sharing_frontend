@@ -9,6 +9,7 @@ import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
 
+
 export default class Groups extends React.Component {
 
     constructor(props) {
@@ -30,6 +31,7 @@ export default class Groups extends React.Component {
             addnewgroupmodelshow: false,
             removegroupmodelshow: false,
             disdetail: false,
+            userupdatedata: []
         }
 
         this.services = new Service();
@@ -252,6 +254,51 @@ export default class Groups extends React.Component {
         })
         this.state.disgmembershow = false;
         this.state.disdetail = true;
+
+
+        var data = {
+            uid: id
+        }
+
+        this.setState({
+            userupdatedata: []
+        });
+
+        this.services.senddata('userDetails', data);
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'userDetails':
+
+                    console.log("alldata history:- ", res.data);
+                    this.setState({
+                        userupdatedata: res.data
+                    })
+                    let userArray = []
+                    for (var i = 0; i < res.data.length; i++) {
+                        let decryptedData_lat = res.data[i].latitude;
+                        var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                        var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8))
+
+                        let decryptedData_long = res.data[i].longitude;
+                        var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                        var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                        var timestamp = res.data[i].cd;
+                        let obj = {
+                            lat: parseFloat(lat).toFixed(4),
+                            long: parseFloat(long).toFixed(4),
+                            cd: timestamp
+                        }
+                        userArray.push(obj)
+                    }
+
+                    this.setState({
+                        userupdatedata: userArray
+                    });
+
+                    break;
+            }
+        });
 
     }
 
@@ -490,17 +537,37 @@ export default class Groups extends React.Component {
                                     </button>
                                 </div>
                                 <div className="modal-body">
-                                    <div className="row">
-                                        <div className="col-xl-4 col-4">
-                                            timestamp
-                                        </div>
-                                        <div className="col-xl-4 col-4">
-                                            latitude
-                                        </div>
-                                        <div className="col-xl-4 col-4">
-                                            longitud
-                                        </div>
-                                    </div>
+                                    <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Timestamp</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {(this.state.userupdatedata) ?
+                                                this.state.userupdatedata.map(function (obj, i) {
+                                                    return (
+                                                        <tr key={i}>
+                                                            <td>
+                                                                <span>{obj.lat}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span>{obj.long}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span>{obj.cd}</span>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                }, this)
+                                                : ''
+                                            }
+                                        </tbody>
+                                    </table>
+
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>

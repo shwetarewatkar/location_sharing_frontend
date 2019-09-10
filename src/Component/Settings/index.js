@@ -95,59 +95,61 @@ export default class Setting extends React.Component {
             });
             this.state.erremail = false;
         } else {
-            this.setState({
-                erremail: true
-            });
-            this.state.erremail = true;
-        }
 
-        if (this.state.erremail == true) {
+            let decryptedData_email = localStorage.getItem('email');
+            var bytes_email = CryptoJS.AES.decrypt(decryptedData_email.toString(), 'Location-Sharing');
+            var localemail = JSON.parse(bytes_email.toString(CryptoJS.enc.Utf8));
 
-            var data = {
-                uid: "",
-                email: this.state.email
+            if (localemail == this.state.email) {
+                this.setState({
+                    erremail: true
+                });
+                this.state.erremail = true;
+            } else {
+                this.setState({
+                    erremail: false
+                });
+                this.state.erremail = false;
+                alertify.error("Entered Email Is Not Exist !");
             }
-
-            this.services.senddata('CheckUserByEmail', data);
-            this.services.getdata().subscribe((res) => {
-
-                switch (res.event) {
-                    case 'EmailExsists':
-
-                        if (res.data.Exists) {
-
-                            firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
-
-                                alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
-                                this.setState({
-                                    email: ''
-                                })
-                                // this.props.history.push('/');
-
-                            }).catch(function (error) {
-                                alertify.error(error.message);
-                            });
-
-                        } else {
-                            alertify.error("Email is not exist");
-                        }
-
-                        break;
-                }
-            });
-
-            // user.sendEmailVerification().then(() => {
-
-            //     this.setState({
-            //         showbtn: true
-            //     })
-            //     this.state.showbtn = true;
-
-            // }).catch(function (error) {
-            //     console.log(error);
-            // });
-
         }
+
+        // if (this.state.erremail == true) {
+
+        //     var data = {
+        //         uid: "",
+        //         email: this.state.email
+        //     }
+
+        //     this.services.senddata('CheckUserByEmail', data);
+        //     this.services.getdata().subscribe((res) => {
+
+        //         switch (res.event) {
+        //             case 'EmailExsists':
+
+        //                 if (res.data.Exists) {
+
+        //                     firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+
+        //                         alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
+        //                         this.setState({
+        //                             email: ''
+        //                         })
+        //                         // this.props.history.push('/');
+
+        //                     }).catch(function (error) {
+        //                         alertify.error(error.message);
+        //                     });
+
+        //                 } else {
+        //                     alertify.error("Email is not exist");
+        //                 }
+
+        //                 break;
+        //         }
+        //     });
+
+        // }
     }
 
     onChangeSubmit(e) {
