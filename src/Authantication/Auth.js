@@ -60,6 +60,9 @@ export default class Auth extends React.Component {
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
                 case 'Auth_Status':
+
+                    // console.log("res auth data:- ", res.data);
+
                     // alertify.success("Login Suuccessfully");
                     break;
             }

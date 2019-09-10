@@ -1,5 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Service from '../../Services/service';
+import CryptoJS from 'crypto-js';
+import history from '../../History';
+
+
+var setuser = false;
+var setpeople = false;
+var setgroup = false;
+var setsetting = false;
 
 export default class Sidebar extends React.Component {
 
@@ -7,54 +16,96 @@ export default class Sidebar extends React.Component {
         super(props);
 
         this.Class = this.Class.bind(this);
-
-        this.state = {
-            setuser: false,
-            setpeople: false,
-            setgroup: false,
-            setsetting: false
-        }
+        this.logOut = this.logOut.bind(this);
+        this.services = new Service();
 
     }
 
+    componentDidMount() {
+
+        if (window.location.pathname == '/user') {
+
+            setuser = true;
+            setpeople = false;
+            setgroup = false;
+            setsetting = false;
+
+        } else if (window.location.pathname == '/people') {
+
+            setuser = false;
+            setpeople = true;
+            setgroup = false;
+            setsetting = false;
+
+        } else if (window.location.pathname == '/groups') {
+
+            setuser = false;
+            setpeople = false;
+            setgroup = true;
+            setsetting = false;
+
+        } else if (window.location.pathname == '/setting') {
+
+            setuser = false;
+            setpeople = false;
+            setgroup = false;
+            setsetting = true;
+
+        }
+    }
 
     Class(path) {
-        localStorage.setItem('ActiveTab', path);
+
         if (path == 'user') {
-            this.setState({
-                setuser: true,
-                setpeople: false,
-                setgroup: false,
-                setsetting: false
-            })
+
+            setuser = true;
+            setpeople = false;
+            setgroup = false;
+            setsetting = false;
+
         } else if (path == 'people') {
-            this.setState({
-                setuser: false,
-                setpeople: true,
-                setgroup: false,
-                setsetting: false
-            })
+
+            setuser = false;
+            setpeople = true;
+            setgroup = false;
+            setsetting = false;
+
         } else if (path == 'groups') {
-            this.setState({
-                setuser: false,
-                setpeople: false,
-                setgroup: true,
-                setsetting: false
-            })
+
+            setuser = false;
+            setpeople = false;
+            setgroup = true;
+            setsetting = false;
+
         } else if (path == 'setting') {
-            this.setState({
-                setuser: false,
-                setpeople: false,
-                setgroup: false,
-                setsetting: true
-            })
+
+            setuser = false;
+            setpeople = false;
+            setgroup = false;
+            setsetting = true;
+
         }
+    }
+
+    logOut = (e) => {
+
+        let decryptedData_uid = localStorage.getItem('uid');
+        var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
+        var userid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
+
+        var data = {
+            uid: userid
+        }
+
+        this.services.senddata('LogoutEvent', data);
+        history.push('/');
     }
 
     render() {
+
         return (
 
-            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion  " id="accordionSidebar">
+            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion collapse show" id="accordionSidebar">
 
                 <Link className="sidebar-brand d-flex align-items-center justify-content-center" to={'/user'}>
                     <div className="sidebar-brand-icon rotate-n-15">
@@ -67,29 +118,29 @@ export default class Sidebar extends React.Component {
 
                 <hr className="sidebar-divider my-0" />
 
-                <li className={(this.state.setuser) ? 'nav-item active' : 'nav-item'}>
-                    <Link className="nav-link " to={'/user'} data-tab="user" onClick={this.Class.bind(this, 'user')}>
+                <li className={(setuser) ? 'nav-item active' : 'nav-item'}>
+                    <Link className="nav-link " to={'/user'} onClick={this.Class.bind(this, 'user')}>
                         <i className="fas fa-plus"></i>
                         <span> Add New User</span>
                     </Link>
                 </li>
 
-                <li className={(this.state.setpeople) ? 'nav-item active' : 'nav-item'}>
-                    <Link className="nav-link" to={'/people'} data-tab="people" onClick={this.Class.bind(this, 'people')}>
+                <li className={(setpeople) ? 'nav-item active' : 'nav-item'}>
+                    <Link className="nav-link" to={'/people'} onClick={this.Class.bind(this, 'people')}>
                         <i className="fas fa-user"></i>
                         <span> People</span>
                     </Link>
                 </li>
 
-                <li className={(this.state.setgroup) ? 'nav-item active' : 'nav-item'}>
-                    <Link className="nav-link" to={'/groups'} data-tab="groups" onClick={this.Class.bind(this, 'groups')}>
+                <li className={(setgroup) ? 'nav-item active' : 'nav-item'}>
+                    <Link className="nav-link" to={'/groups'} onClick={this.Class.bind(this, 'groups')}>
                         <i className="fas fa-users"></i>
                         <span> Groups</span>
                     </Link>
                 </li>
 
-                <li className={(this.state.setsetting) ? 'nav-item active' : 'nav-item'}>
-                    <Link className="nav-link" to={'/setting'} data-tab="setting" onClick={this.Class.bind(this, 'setting')}>
+                <li className={(setsetting) ? 'nav-item active' : 'nav-item'}>
+                    <Link className="nav-link" to={'/setting'} onClick={this.Class.bind(this, 'setting')}>
                         <i className="fas fa-cog"></i>
                         <span> Settings</span>
                     </Link>
@@ -98,10 +149,10 @@ export default class Sidebar extends React.Component {
                 <hr className="sidebar-divider" />
 
                 <li className="nav-item">
-                    <Link className="nav-link" to={'/'}>
+                    <a className="nav-link btn-hover" onClick={this.logOut}>
                         <i className="fas fa-sign-out-alt"></i>
                         <span> Logout</span>
-                    </Link>
+                    </a>
                 </li>
 
             </ul>

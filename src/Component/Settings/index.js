@@ -31,7 +31,6 @@ export default class Setting extends React.Component {
             deletepopupshow: false,
             email: '',
             erremail: true,
-            showbtn: false,
             password: '',
             errpass: true,
             repassword: '',
@@ -102,20 +101,51 @@ export default class Setting extends React.Component {
             this.state.erremail = true;
         }
 
-        var user = firebase.auth().currentUser;
-
         if (this.state.erremail == true) {
 
-            user.sendEmailVerification().then(() => {
+            var data = {
+                uid: "",
+                email: this.state.email
+            }
 
-                this.setState({
-                    showbtn: true
-                })
-                this.state.showbtn = true;
+            this.services.senddata('CheckUserByEmail', data);
+            this.services.getdata().subscribe((res) => {
 
-            }).catch(function (error) {
-                console.log(error);
+                switch (res.event) {
+                    case 'EmailExsists':
+
+                        if (res.data.Exists) {
+
+                            firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+
+                                alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
+                                this.setState({
+                                    email: ''
+                                })
+                                // this.props.history.push('/');
+
+                            }).catch(function (error) {
+                                alertify.error(error.message);
+                            });
+
+                        } else {
+                            alertify.error("Email is not exist");
+                        }
+
+                        break;
+                }
             });
+
+            // user.sendEmailVerification().then(() => {
+
+            //     this.setState({
+            //         showbtn: true
+            //     })
+            //     this.state.showbtn = true;
+
+            // }).catch(function (error) {
+            //     console.log(error);
+            // });
 
         }
     }
@@ -284,57 +314,22 @@ export default class Setting extends React.Component {
                                                         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                                             <div className="row">
                                                                 <div className="col-xl-3">
+                                                                    <form className="user" onSubmit={this.onSubmit}>
+                                                                        <br />
+                                                                        <div className="form-group">
+                                                                            <label>Email Address</label>
+                                                                            {
+                                                                                (this.state.erremail) ?
+                                                                                    <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                                                    :
+                                                                                    <input type="email" style={{ border: '1px solid red' }} value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                                            }
 
-                                                                    {
-                                                                        (this.state.showbtn) ?
-
-                                                                            <form className="user" onSubmit={this.onChangeSubmit}>
-                                                                                <br />
-
-                                                                                <div className="form-group">
-                                                                                    <label>Password</label>
-                                                                                    {
-                                                                                        (this.state.errpass) ?
-                                                                                            <input type="password" value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
-                                                                                            :
-                                                                                            <input type="password" style={{ border: '1px solid red' }} value={this.state.password} onChange={this.onChangePassword} className="form-control" id="exampleInputPassword" placeholder="Password" />
-                                                                                    }
-
-                                                                                </div>
-                                                                                <div className="form-group">
-                                                                                    <label>Confirm Password</label>
-                                                                                    {
-                                                                                        (this.state.errrepass) ?
-                                                                                            <input type="password" value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
-                                                                                            :
-
-                                                                                            <input type="password" style={{ border: '1px solid red' }} value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control" id="exampleRepeatPassword" placeholder="Repeat Password" />
-                                                                                    }
-
-                                                                                </div>
-                                                                                <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
-                                                                                    Done
-                </button>
-                                                                            </form>
-                                                                            :
-                                                                            <form className="user" onSubmit={this.onSubmit}>
-                                                                                <br />
-                                                                                <div className="form-group">
-                                                                                    <label>Email Address</label>
-                                                                                    {
-                                                                                        (this.state.erremail) ?
-                                                                                            <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
-                                                                                            :
-                                                                                            <input type="email" style={{ border: '1px solid red' }} value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
-                                                                                    }
-
-                                                                                </div>
-                                                                                <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
-                                                                                    Confirm
-                </button>
-                                                                            </form>
-                                                                    }
-
+                                                                        </div>
+                                                                        <button type="submit" className="btn btn-primary btn-block" style={{ color: 'white' }}>
+                                                                            Confirm
+                                                                        </button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -350,8 +345,6 @@ export default class Setting extends React.Component {
                                                         </div>
                                                     </div>
                                             }
-
-
 
                                         </div>
                                     </div>

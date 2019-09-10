@@ -16,8 +16,7 @@ export default class Service extends Component {
     }
 
     senddata(e, Data) {
-
-        console.log("req:- ", { event: e, data: Data });
+        // console.log("req:- ", { event: e, data: Data });
 
         return socket.emit('req', { event: e, data: Data });
     }
@@ -25,10 +24,13 @@ export default class Service extends Component {
     getdata() {
         return Observable.create((observer) => {
             socket.on('res', (data) => {
+                // console.log("service:- ", data);
                 observer.next(data);
             });
         });
     }
 
 }
+
+
 

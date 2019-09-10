@@ -63,19 +63,22 @@ export default class People extends React.Component {
                                 uid: this.state.uid,
                                 GroupId: item._id
                             }
+
                             this.services.senddata('GetMemeberList', data);
                             this.services.getdata().subscribe((res) => {
                                 switch (res.event) {
                                     case 'GroupMemberList':
 
-                                        if (this.state.uid != res.data[i].uid) {
-                                            this.setState({
-                                                defaultdata: res.data,
-                                                removeid: '',
-                                                removemodelshow: false
-                                            })
-                                            this.state.removemodelshow = false;
-                                        }
+                                        res.data.MemberList.forEach((mitem, m) => {
+                                            if (this.state.uid != mitem.uid) {
+                                                this.setState({
+                                                    defaultdata: res.data.MemberList,
+                                                    removeid: '',
+                                                    removemodelshow: false
+                                                })
+                                                this.state.removemodelshow = false;
+                                            }
+                                        });
 
                                         break;
                                 }
@@ -151,14 +154,16 @@ export default class People extends React.Component {
                                 uid: this.state.uid,
                                 GroupId: item._id
                             }
+
                             this.services.senddata('GetMemeberList', data);
                             this.services.getdata().subscribe((res) => {
                                 switch (res.event) {
                                     case 'GroupMemberList':
 
-                                        if (this.state.uid != res.data[i].uid) {
+                                        if (this.state.uid != res.data.MemberList[i].uid) {
+
                                             this.setState({
-                                                defaultdata: res.data,
+                                                defaultdata: res.data.MemberList,
                                                 removeid: '',
                                                 removemodelshow: false
                                             })
@@ -201,7 +206,7 @@ export default class People extends React.Component {
     }
 
     render() {
-
+     
         return (
 
             <div id="wrapper">

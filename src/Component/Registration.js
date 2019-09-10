@@ -345,10 +345,10 @@ export default class Registration extends Component {
                                         <div className="form-group">
                                             {
                                                 (this.state.errrepass) ?
-                                                    <input type="password" value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password" />
+                                                    <input type="password" value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control form-control-user" id="exampleRepeatPassword" placeholder="Confirm Password" />
                                                     :
 
-                                                    <input type="password" style={{ border: '1px solid red' }} value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password" />
+                                                    <input type="password" style={{ border: '1px solid red' }} value={this.state.repassword} onChange={this.onChangeRepassword} className="form-control form-control-user" id="exampleRepeatPassword" placeholder="Confirm Password" />
                                             }
 
                                         </div>

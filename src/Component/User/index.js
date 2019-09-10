@@ -12,15 +12,13 @@ import CryptoJS from 'crypto-js';
 var map, marker, infoWindow, bounds;
 var pos = []
 var markers = [];
-var updatelocation = [];
+var userGroupids = "";
+var currentGroupid = "";
 
 export default class User extends React.Component {
 
     constructor(props) {
         super(props);
-
-
-        
 
         this.services = new Service();
         this.auth = new Auth();
@@ -43,14 +41,7 @@ export default class User extends React.Component {
             showMenu: true
         }
 
-        // updatelocation = [];
-        // this.services.getdata().subscribe((res) => {
-        //     switch (res.event) {
-        //         case 'UserLocationUpdate':
-        //             updatelocation.push(res.data);
-        //             break;
-        //     }
-        // });
+
 
     }
 
@@ -64,7 +55,8 @@ export default class User extends React.Component {
             });
             bounds = new window.google.maps.LatLngBounds();
             this.getAllLocations()
-            this.defaultLocData()
+            this.defaultLocData();
+
         }, 1000)
 
         let decryptedData_code = localStorage.getItem('invitecode');
@@ -92,9 +84,84 @@ export default class User extends React.Component {
             }
         });
 
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'UserLocationUpdate':
+
+                    if (userGroupids.indexOf(res.data.uid) > -1) {
+
+                        for (var i = 0; i < markers.length; i++) {
+                            markers[i].setMap(null);
+                        }
+
+                        var data = {
+                            uid: this.state.uid,
+                            GroupId: currentGroupid
+                        }
+
+                        this.services.senddata('GetMemeberList', data);
+                        this.services.getdata().subscribe((res) => {
+                            switch (res.event) {
+                                case 'GroupMemberList':
+
+                                    userGroupids = "";
+
+                                    userGroupids = res.data.members;
+
+                                    res.data.MemberList.forEach((item, i) => {
+
+                                        // var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
+
+                                        let decryptedData_lat = item.latitude;
+                                        var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                        var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                                        let decryptedData_long = item.longitude;
+                                        var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                        var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                                        var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+
+                                        marker = new window.google.maps.Marker({
+                                            position: uluru,
+                                            map: map,
+                                            title: item.username
+                                        })
+
+                                        var content = '<div id="content">' +
+                                            '<h6>' + item.username + '</h6>' +
+                                            '</div>';
+                                        var infowindow = new window.google.maps.InfoWindow();
+
+                                        window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                                            return function () {
+                                                infowindow.setContent(content);
+                                                infowindow.open(map, marker);
+                                                map.setCenter(marker.getPosition());
+                                            };
+                                        })(marker, content, infowindow));
+
+
+                                        markers.push(marker)
+                                    })
+
+                                    break;
+                            }
+                        });
+
+                    } else {
+                        console.log("not inarray", currentGroupid);
+                    }
+
+                    break;
+            }
+        });
+
     }
 
     defaultLocData() {
+
+        userGroupids = "";
 
         this.services.senddata('GetGroupsList', '');
         this.services.getdata().subscribe((res) => {
@@ -104,6 +171,10 @@ export default class User extends React.Component {
                     res.data.forEach((item, i) => {
 
                         if (item.default) {
+
+                            userGroupids = item.members;
+                            currentGroupid = item._id;
+
                             var data = {
                                 uid: this.state.uid,
                                 GroupId: item._id
@@ -114,53 +185,7 @@ export default class User extends React.Component {
                                 switch (res.event) {
                                     case 'GroupMemberList':
 
-                                        res.data.forEach((items, ii) => {
-
-                                            // if (items.uid == updatelocation[0].uid) {
-
-                                            //     let decryptedData_lat = updatelocation[0].latitude;
-                                            //     var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                                            //     var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
-
-                                            //     let decryptedData_long = updatelocation[0].longitude;
-                                            //     var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                                            //     var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
-
-                                            //     var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
-
-                                            //     console.log("update location:- ", uluru);
-
-                                            //     marker = new window.google.maps.Marker({
-                                            //         position: uluru,
-                                            //         map: map,
-                                            //         // label: items.username,
-                                            //         label: items.username[0 % items.username.length],
-                                            //         title: items.username
-                                            //     })
-
-                                            //     markers.push(marker)
-
-                                            // } else {
-                                            //     let decryptedData_lat = items.latitude;
-                                            //     var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                                            //     var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
-
-                                            //     let decryptedData_long = items.longitude;
-                                            //     var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                                            //     var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
-
-                                            //     var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
-
-                                            //     marker = new window.google.maps.Marker({
-                                            //         position: uluru,
-                                            //         map: map,
-                                            //         // label: items.username,
-                                            //         label: items.username[0 % items.username.length],
-                                            //         title: items.username
-                                            //     })
-
-                                            //     markers.push(marker)
-                                            // }
+                                        res.data.MemberList.forEach((items, ii) => {
 
                                             let decryptedData_lat = items.latitude;
                                             var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
@@ -175,32 +200,35 @@ export default class User extends React.Component {
                                             marker = new window.google.maps.Marker({
                                                 position: uluru,
                                                 map: map,
-                                                // label: items.username,
-                                                label: items.username[0 % items.username.length],
                                                 title: items.username
                                             })
 
+                                            var content = '<div id="content">' +
+                                                '<h6>' + items.username + '</h6>' +
+                                                '</div>';
+                                            var infowindow = new window.google.maps.InfoWindow();
+
+                                            window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                                                return function () {
+                                                    infowindow.setContent(content);
+                                                    infowindow.open(map, marker);
+                                                    map.setCenter(marker.getPosition());
+                                                };
+                                            })(marker, content, infowindow));
+
+
                                             markers.push(marker)
 
-
-                                            // var uluru = { lat: parseFloat(items.latitude), lng: parseFloat(items.longitude) };
-
-
                                         })
-
 
                                         break;
                                 }
                             });
                         }
-
                     })
-
-
                     break;
             }
         });
-
 
     }
 
@@ -212,10 +240,11 @@ export default class User extends React.Component {
 
     onChangeGroup(e) {
 
-
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
+
+        var newgid = e.target.value;
 
         var data = {
             uid: this.state.uid,
@@ -227,7 +256,14 @@ export default class User extends React.Component {
             switch (res.event) {
                 case 'GroupMemberList':
 
-                    res.data.forEach((item, i) => {
+                    userGroupids = "";
+                    // console.log("items:- ", res.data);
+
+                    userGroupids = res.data.members;
+
+                    res.data.MemberList.forEach((item, i) => {
+
+                        currentGroupid = newgid;
 
                         // var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
 
@@ -244,9 +280,22 @@ export default class User extends React.Component {
                         marker = new window.google.maps.Marker({
                             position: uluru,
                             map: map,
-                            label: item.username[0 % item.username.length],
                             title: item.username
                         })
+
+                        var content = '<div id="content">' +
+                            '<h6>' + item.username + '</h6>' +
+                            '</div>';
+                        var infowindow = new window.google.maps.InfoWindow();
+
+                        window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                            return function () {
+                                infowindow.setContent(content);
+                                infowindow.open(map, marker);
+                                map.setCenter(marker.getPosition());
+                            };
+                        })(marker, content, infowindow));
+
 
                         markers.push(marker)
                     })
@@ -291,11 +340,17 @@ export default class User extends React.Component {
                     case 'AddDefaultMemebrResp':
 
                         if (res.data.status == true) {
+                            this.setState({
+                                invite: ''
+                            });
                             alertify.success(res.data.message);
                         } else {
+                            this.setState({
+                                invite: ''
+                            });
                             alertify.error(res.data.message);
                         }
-                        
+
                         break;
                 }
             });
@@ -349,6 +404,18 @@ export default class User extends React.Component {
         }
     }
 
+    copyToClipboard(link) {
+
+        var textField = document.createElement('textarea')
+        textField.innerText = link
+        document.body.appendChild(textField)
+        textField.select()
+        document.execCommand('copy')
+        textField.remove()
+        alertify.success("Copied!");
+
+    }
+
     render() {
 
         return (
@@ -377,9 +444,9 @@ export default class User extends React.Component {
                                                         <div className="input-group">
                                                             {
                                                                 (this.state.errinvite) ?
-                                                                    <input type="text" className="form-control" value={this.invite} onChange={this.onChangeInvite} placeholder="Invite Your Friends" />
+                                                                    <input type="text" className="form-control" value={this.state.invite} onChange={this.onChangeInvite} placeholder="Invite Your Friends" />
                                                                     :
-                                                                    <input type="text" style={{ border: '1px solid red' }} className="form-control" value={this.invite} onChange={this.onChangeInvite} placeholder="Invite Your Friends" />
+                                                                    <input type="text" style={{ border: '1px solid red' }} className="form-control" value={this.state.invite} onChange={this.onChangeInvite} placeholder="Invite Your Friends" />
                                                             }
 
                                                             <div className="input-group-append">
@@ -395,7 +462,7 @@ export default class User extends React.Component {
                                                     <div className="input-group">
                                                         <input type="text" value={this.state.sharelink} onChange={this.onChangeShareLink} className="form-control" placeholder="Invite Your Friends" />
                                                         <div className="input-group-append">
-                                                            <button className="btn btn-success" type="button">
+                                                            <button className="btn btn-success" type="button" onClick={this.copyToClipboard.bind(this, this.state.sharelink)}>
                                                                 Share Link
                                                                 </button>
                                                         </div>

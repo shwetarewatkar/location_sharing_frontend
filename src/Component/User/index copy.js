@@ -48,20 +48,20 @@ class Locations extends Component {
     //   console.log("data",data)
     // });
     infoWindow = new window.google.maps.InfoWindow();
-//     navigator.geolocation.getCurrentPosition(successCallback,
-//       errorCallback,
-//       {maximumAge:600000});
+    //     navigator.geolocation.getCurrentPosition(successCallback,
+    //       errorCallback,
+    //       {maximumAge:600000});
 
-// function successCallback(position) {
-//   console.log("position---->",position)
-// // By using the 'maximumAge' option above, the position
-// // object is guaranteed to be at most 10 minutes old.
-// }
+    // function successCallback(position) {
+    //   console.log("position---->",position)
+    // // By using the 'maximumAge' option above, the position
+    // // object is guaranteed to be at most 10 minutes old.
+    // }
 
-// function errorCallback(error) {
-//   console.log("error---->",error)
-// // Update a div element with error.message.
-// }
+    // function errorCallback(error) {
+    //   console.log("error---->",error)
+    // // Update a div element with error.message.
+    // }
     if (navigator && navigator.geolocation) {
       self.setState({ navigatorFlag: false })
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -78,7 +78,7 @@ class Locations extends Component {
         })
 
       }, function (error) {
-        console.log("error",error)
+        console.log("error", error)
         self.setState({ navigatorFlag: true })
         self.handleLocationError(true, infoWindow, map.getCenter());
       });

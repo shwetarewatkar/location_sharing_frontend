@@ -69,8 +69,6 @@ export default class Forgot extends Component {
             this.state.erremail = true;
         }
 
-        var user = firebase.auth().currentUser;
-
         if (this.state.erremail == true) {
 
             var data = {
@@ -85,15 +83,14 @@ export default class Forgot extends Component {
                     case 'EmailExsists':
 
                         if (res.data.Exists) {
-                            user.sendEmailVerification().then(() => {
+                            
+                            firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
 
-                                alertify.success("Please check your mail and verify link");
-                                this.props.history.push('/forgot');
+                                alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
+                                this.props.history.push('/');
 
                             }).catch(function (error) {
-
                                 alertify.error(error.message);
-
                             });
 
                         } else {

@@ -280,6 +280,8 @@ class Login extends Component {
                     switch (res.event) {
                         case 'Auth_Status':
 
+                            // console.log("login data:- ", res.data);
+
                             if (res.data.user_status) {
 
                                 var uid = CryptoJS.AES.encrypt(JSON.stringify(user.uid), 'Location-Sharing');
