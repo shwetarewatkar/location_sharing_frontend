@@ -3,13 +3,13 @@ import axios from 'axios';
 import socketIOClient from "socket.io-client";
 import { Observable, Observer } from 'rxjs';
 
-const socket = socketIOClient("https://location.artoon.in:3001");
+const socket = socketIOClient("https://new-dev.artoon.in:6030");
 
 export default class Service extends Component {
 
     apiURL = "https://new-dev.artoon.in:6029";
 
-    domail = "https://location.artoon.in/invite?id=";
+    domail = "https://ls.artoon.in/invite?id=";
 
     postdata(data) {
         return axios.post(`${this.apiURL}/location/add`, data);
