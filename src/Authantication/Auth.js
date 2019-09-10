@@ -52,6 +52,7 @@ export default class Auth extends React.Component {
             username: username,
             latitude: decryptedData_longitude,
             longitude: decryptedData_latitude,
+            status: false
             // latitude: longchar,
             // longitude: latchar
         }

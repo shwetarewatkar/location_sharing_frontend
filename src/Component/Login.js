@@ -268,6 +268,7 @@ class Login extends Component {
                     username: user.username,
                     latitude: latitude.toString(),
                     longitude: longitude.toString(),
+                    status: true,
                     // latitude: latchar,
                     // longitude: longchar
                 }
