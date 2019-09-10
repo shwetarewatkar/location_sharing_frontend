@@ -98,24 +98,21 @@ export default class Groups extends React.Component {
             })
             this.state.groupmodelshow = false;
 
-            alertify.success("Join Successfully");
 
-            // this.services.getdata().subscribe((res) => {
-            //     switch (res.event) {
-            //         case 'AddMemebrResp':
-            //             this.setState({
-            //                 invitecode: '',
-            //                 groupmodelshow: false
-            //             })
-            //             this.state.groupmodelshow = false;
 
-            //             alertify.success("Join Successfully");
+            this.services.getdata().subscribe((res) => {
+                switch (res.event) {
+                    case 'AddMemebrResp':
 
-            //             console.log(res.data);
+                        if (res.data.error) {
+                            alertify.error(res.data.error);
+                        } else {
+                            alertify.success("Join Successfully");
+                        }
 
-            //             break;
-            //     }
-            // });
+                        break;
+                }
+            });
 
         }
 

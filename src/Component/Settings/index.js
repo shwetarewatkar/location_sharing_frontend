@@ -114,42 +114,42 @@ export default class Setting extends React.Component {
             }
         }
 
-        // if (this.state.erremail == true) {
+        if (this.state.erremail == true) {
 
-        //     var data = {
-        //         uid: "",
-        //         email: this.state.email
-        //     }
+            var data = {
+                uid: "",
+                email: this.state.email
+            }
 
-        //     this.services.senddata('CheckUserByEmail', data);
-        //     this.services.getdata().subscribe((res) => {
+            this.services.senddata('CheckUserByEmail', data);
+            this.services.getdata().subscribe((res) => {
 
-        //         switch (res.event) {
-        //             case 'EmailExsists':
+                switch (res.event) {
+                    case 'EmailExsists':
 
-        //                 if (res.data.Exists) {
+                        if (res.data.Exists) {
 
-        //                     firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+                            firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
 
-        //                         alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
-        //                         this.setState({
-        //                             email: ''
-        //                         })
-        //                         // this.props.history.push('/');
+                                alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
+                                this.setState({
+                                    email: ''
+                                })
+                                // this.props.history.push('/');
 
-        //                     }).catch(function (error) {
-        //                         alertify.error(error.message);
-        //                     });
+                            }).catch(function (error) {
+                                alertify.error(error.message);
+                            });
 
-        //                 } else {
-        //                     alertify.error("Email is not exist");
-        //                 }
+                        } else {
+                            alertify.error("Email is not exist");
+                        }
 
-        //                 break;
-        //         }
-        //     });
+                        break;
+                }
+            });
 
-        // }
+        }
     }
 
     onChangeSubmit(e) {
