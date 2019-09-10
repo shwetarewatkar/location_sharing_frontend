@@ -38,8 +38,95 @@ export default class User extends React.Component {
             invite: '',
             errinvite: true,
             a: '',
-            showMenu: true
+            showMenu: true,
+            latitude: '',
+            longitude: ''
         }
+
+        setInterval(() => {
+            // console.log("callin in");
+
+            let decryptedData_uid = localStorage.getItem('uid');
+            if (!decryptedData_uid) {
+                return false;
+            }
+            
+            var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
+            var userid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
+
+
+            let decryptedData_latitude = localStorage.getItem('latitude');
+            
+            var bytes_latitude = CryptoJS.AES.decrypt(decryptedData_latitude.toString(), 'Location-Sharing');
+            var current_latchar = JSON.parse(bytes_latitude.toString(CryptoJS.enc.Utf8));
+
+            let decryptedData_longitude = localStorage.getItem('longitude');
+            var bytes_longitude = CryptoJS.AES.decrypt(decryptedData_longitude.toString(), 'Location-Sharing');
+            var current_longchar = JSON.parse(bytes_longitude.toString(CryptoJS.enc.Utf8));
+
+            console.log("current latitude:- ", current_latchar);
+            console.log("current longitude:- ", current_longchar);
+
+            const location = window.navigator && window.navigator.geolocation
+
+            if (location) {
+                this.setState({ showAlert: false })
+                location.getCurrentPosition((position) => {
+
+                    this.setState({
+                        latitude: position.coords.longitude.toString(),
+                        longitude: position.coords.latitude.toString(),
+                    })
+
+                    // var latest_latitude = position.coords.latitude.toString();
+                    // var latest_longitude = position.coords.longitude.toString();
+
+
+                    console.log("letest longitude:- ", this.state.longitude);
+                    console.log("latest latitude:- ", this.state.latitude);
+
+
+
+                    console.log("-----------------------------------------")
+                    console.log("lat latitude", this.state.latitude);
+                    console.log("current lat", current_latchar);
+                    console.log("-----------------------------------------")
+
+                    if (this.state.latitude == current_latchar) {
+                        console.log("not event");
+                    } else {
+
+                        var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                        localStorage.setItem("latitude", latitude.toString());
+
+                        var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                        localStorage.setItem("longitude", longitude.toString());
+
+                        var data = {
+                            uid: userid,
+                            latitude: latitude.toString(),
+                            longitude: longitude.toString()
+                        }
+
+                        console.log(data);
+
+                        this.services.senddata('UpdateLocation', data);
+
+                        console.log("call event");
+                    }
+
+
+                }, (error) => {
+                    this.setState({ showAlert: true });
+                })
+            } else {
+                this.setState({ showAlert: true });
+                this.handleLocationError(false, infoWindow, map.getCenter());
+            }
+
+        }, 3000)
+
+
 
 
 
