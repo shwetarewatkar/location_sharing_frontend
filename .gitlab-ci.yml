@@ -15,3 +15,22 @@ deploy_dev:
     - cp htaccess build/.htaccess
     - ls build/.htaccess 
   when: manual
+
+
+deploy_client:
+  stage: deploy
+  tags: 
+    - artoon-client
+  environment:
+    name: dev
+    url: https://location.artoon.in/
+  script:
+    - cd /var/www/html/location-sharing
+    - git pull http://$usr:$pwd@gitlab.artoon.in/WebSites/ReactJS/location-sharing.git
+    - npm install --cache
+    - npm run-script build
+  after_script:
+    - cd /var/www/html/location-sharing
+    - cp htaccess build/.htaccess
+    - ls build/.htaccess 
+  when: manual
