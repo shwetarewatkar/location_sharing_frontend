@@ -284,7 +284,6 @@ class Login extends Component {
 
                 this.services.senddata('Auth', data);
                 this.services.getdata().subscribe((res) => {
-
                     switch (res.event) {
                         case 'Auth_Status':
 
@@ -310,12 +309,10 @@ class Login extends Component {
 
                                 if (window.location.pathname == '/') {
                                     this.props.history.push('/user');
+                                    alertify.success("Login Successfully");
                                 }
 
                             }
-                            //  else {
-                            //     alertify.error("User does not exist!");
-                            // }
 
                             break;
                     }

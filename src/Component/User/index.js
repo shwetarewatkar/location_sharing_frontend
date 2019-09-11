@@ -426,6 +426,8 @@ export default class User extends React.Component {
 
                         if (res.data.status == true) {
 
+                            var massage = res.data.message;
+
                             this.setState({
                                 invite: ''
                             });
@@ -434,85 +436,89 @@ export default class User extends React.Component {
                             this.services.getdata().subscribe((res) => {
                                 switch (res.event) {
                                     case 'GroupList':
+
                                         for (var i = 0; i < markers.length; i++) {
                                             markers[i].setMap(null);
                                         }
-                                        console.log("--------------> ", res.data);
 
-                                        // res.data.forEach((item, i) => {
+                                        res.data.forEach((item, i) => {
 
-                                        //     if (item.default) {
+                                            if (item.default) {
 
-                                        //         for (var i = 0; i < markers.length; i++) {
-                                        //             markers[i].setMap(null);
-                                        //         }
+                                                for (var i = 0; i < markers.length; i++) {
+                                                    markers[i].setMap(null);
+                                                }
 
-                                        //         var data = {
-                                        //             uid: this.state.uid,
-                                        //             GroupId: item._id
-                                        //         }
+                                                var data = {
+                                                    uid: this.state.uid,
+                                                    GroupId: item._id
+                                                }
 
-                                        //         this.services.senddata('GetMemeberList', data);
-                                        //         this.services.getdata().subscribe((res) => {
-                                        //             switch (res.event) {
-                                        //                 case 'GroupMemberList':
+                                                this.services.senddata('GetMemeberList', data);
+                                                this.services.getdata().subscribe((res) => {
+                                                    switch (res.event) {
+                                                        case 'GroupMemberList':
 
-                                        //                     res.data.MemberList.forEach((items, ii) => {
+                                                            res.data.MemberList.forEach((items, ii) => {
 
-                                        //                         let decryptedData_lat = items.latitude;
-                                        //                         var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                                        //                         var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+                                                                let decryptedData_lat = items.latitude;
+                                                                var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                                                var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
 
-                                        //                         let decryptedData_long = items.longitude;
-                                        //                         var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                                        //                         var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+                                                                let decryptedData_long = items.longitude;
+                                                                var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                                                var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
 
-                                        //                         var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                                                                var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
 
-                                        //                         marker = new window.google.maps.Marker({
-                                        //                             position: uluru,
-                                        //                             map: map,
-                                        //                             title: items.username
-                                        //                         })
+                                                                marker = new window.google.maps.Marker({
+                                                                    position: uluru,
+                                                                    map: map,
+                                                                    title: items.username
+                                                                })
 
-                                        //                         var content = '<div id="content">' +
-                                        //                             '<h6>' + items.username + '</h6>' +
-                                        //                             '</div>';
-                                        //                         var infowindow = new window.google.maps.InfoWindow();
+                                                                var content = '<div id="content">' +
+                                                                    '<h6>' + items.username + '</h6>' +
+                                                                    '</div>';
+                                                                var infowindow = new window.google.maps.InfoWindow();
 
-                                        //                         window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
-                                        //                             return function () {
-                                        //                                 infowindow.setContent(content);
-                                        //                                 infowindow.open(map, marker);
-                                        //                                 map.setCenter(marker.getPosition());
-                                        //                             };
-                                        //                         })(marker, content, infowindow));
+                                                                window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                                                                    return function () {
+                                                                        infowindow.setContent(content);
+                                                                        infowindow.open(map, marker);
+                                                                        map.setCenter(marker.getPosition());
+                                                                    };
+                                                                })(marker, content, infowindow));
 
 
-                                        //                         markers.push(marker)
+                                                                markers.push(marker)
 
-                                        //                     })
+                                                                this.services.offsocket();
+                                                                
+                                                            })
 
-                                        //                     break;
-                                        //             }
-                                        //         });
-                                        //     }
-                                        // })
+                                                            break;
+                                                    }
+                                                });
+                                                alertify.success(massage);
+                                            }
+                                        })
+                                        
                                         break;
                                 }
                             });
-
-                            alertify.success(res.data.message);
                         } else {
                             this.setState({
                                 invite: ''
                             });
                             alertify.error(res.data.message);
+                            this.services.offsocket();
                         }
 
                         break;
                 }
             });
+
         }
 
     }
@@ -616,7 +622,7 @@ export default class User extends React.Component {
                                                     </form>
                                                 </div>
                                                 <div className="col-xl-4">
-                                                    <label>Share With Friends Url</label>
+                                                    <label>Share With Your Friends</label>
                                                     <div className="input-group">
                                                         <input type="text" value={this.state.sharelink} onChange={this.onChangeShareLink} className="form-control" placeholder="Invite Your Friends" />
                                                         <div className="input-group-append">

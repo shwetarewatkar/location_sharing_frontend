@@ -122,7 +122,7 @@ export default class Sidebar extends React.Component {
                 <li className={(setuser) ? 'nav-item active' : 'nav-item'}>
                     <Link className="nav-link " to={'/user'} onClick={this.Class.bind(this, 'user')}>
                         <i className="fas fa-plus"></i>
-                        <span> Add New User</span>
+                        <span> Add User</span>
                     </Link>
                 </li>
 

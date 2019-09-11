@@ -98,16 +98,16 @@ export default class Groups extends React.Component {
             })
             this.state.groupmodelshow = false;
 
-
-
             this.services.getdata().subscribe((res) => {
                 switch (res.event) {
                     case 'AddMemebrResp':
 
                         if (res.data.error) {
                             alertify.error(res.data.error);
+                            this.services.offsocket();
                         } else {
-                            alertify.success("Join Successfully");
+                            alertify.success("Join successfully");
+                            this.services.offsocket();
                         }
 
                         break;

@@ -17,7 +17,6 @@ export default class Service extends Component {
 
     senddata(e, Data) {
         // console.log("req:- ", { event: e, data: Data });
-
         return socket.emit('req', { event: e, data: Data });
     }
 
@@ -30,9 +29,8 @@ export default class Service extends Component {
         });
     }
 
+    offsocket(){
+        return socket.off('res');
+    }
+
 }
-
-
-
-// TeUvv0
-// 2NQg2i
