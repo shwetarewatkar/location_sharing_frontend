@@ -242,7 +242,12 @@ export default class User extends React.Component {
         });
 
     }
-
+    // hideAllInfoWindows(map) {
+    //     console.log("window.google.maps---->",markers)
+    //     markers.forEach((marker) => {
+    //       if(marker.infowindow) marker.infowindow.close(map, marker);
+    //    }); 
+    //  }
     defaultLocData() {
 
         userGroupids = "";
@@ -292,8 +297,9 @@ export default class User extends React.Component {
                                                 '</div>';
                                             var infowindow = new window.google.maps.InfoWindow();
 
-                                            window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
-                                                return function () {
+                                            window.google.maps.event.addListener(marker, 'click', ( (marker, content, infowindow) => {
+                                                return ()=> {
+                                                    // this.hideAllInfoWindows(map)
                                                     infowindow.setContent(content);
                                                     infowindow.open(map, marker);
                                                     map.setCenter(marker.getPosition());
@@ -302,6 +308,7 @@ export default class User extends React.Component {
 
 
                                             markers.push(marker)
+
 
                                         })
 
@@ -621,7 +628,7 @@ export default class User extends React.Component {
                                                         </div>
                                                     </form>
                                                 </div>
-                                                <div className="col-xl-4">
+                                                <div className="col-xl-5">
                                                     <label>Share With Your Friends</label>
                                                     <div className="input-group">
                                                         <input type="text" value={this.state.sharelink} onChange={this.onChangeShareLink} className="form-control" placeholder="Invite Your Friends" />

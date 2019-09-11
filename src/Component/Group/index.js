@@ -7,6 +7,7 @@ import Service from '../../Services/service';
 import Auth from '../../Authantication/Auth';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
+import moment from 'moment';
 
 export default class Groups extends React.Component {
 
@@ -40,6 +41,7 @@ export default class Groups extends React.Component {
         this.onChangeGroupName = this.onChangeGroupName.bind(this);
         this.delgroupdata = this.delgroupdata.bind(this);
         this.onCloseModel = this.onCloseModel.bind(this);
+        this.onCloseMemberModel = this.onCloseMemberModel.bind(this);
         this.onDeleteSubmit = this.onDeleteSubmit.bind(this);
         this.onAddNewGroup = this.onAddNewGroup.bind(this);
         this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
@@ -244,10 +246,8 @@ export default class Groups extends React.Component {
     getdetail(id) {
 
         this.setState({
-            disgmembershow: false,
             disdetail: true
         })
-        this.state.disgmembershow = false;
         this.state.disdetail = true;
 
 
@@ -359,6 +359,13 @@ export default class Groups extends React.Component {
         this.state.groupdeletemodelshow = false;
         this.state.addnewgroupmodelshow = false;
         this.state.removegroupmodelshow = false;
+        this.state.disdetail = false;
+    }
+
+    onCloseMemberModel() {
+        this.setState({
+            disdetail: false
+        })
         this.state.disdetail = false;
     }
 
@@ -527,7 +534,7 @@ export default class Groups extends React.Component {
                             <form onSubmit={this.onSubmit}>
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalCenterTitle">Members Details</h5>
-                                    <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
+                                    <button type="button" className="close" onClick={this.onCloseMemberModel} data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -553,7 +560,7 @@ export default class Groups extends React.Component {
                                                                 <span>{obj.lat}</span>
                                                             </td>
                                                             <td>
-                                                                <span>{obj.cd}</span>
+                                                                <span>{moment(obj.cd).format('DD-MM-YYYY HH:mm:ss')}</span>
                                                             </td>
                                                         </tr>
                                                     )
@@ -565,7 +572,7 @@ export default class Groups extends React.Component {
 
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-secondary" onClick={this.onCloseMemberModel} data-dismiss="modal">Close</button>
                                 </div>
                             </form>
                         </div>

@@ -140,6 +140,7 @@ class Login extends Component {
             var alllongchar = this.state.longitude.split('.');
             var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
+
             var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
             localStorage.setItem("latitude", latitude.toString());
 
@@ -157,7 +158,6 @@ class Login extends Component {
                 // lat: latchar,
                 // long: longchar
             }
-
 
 
             this.services.postdata(data).then(res => {

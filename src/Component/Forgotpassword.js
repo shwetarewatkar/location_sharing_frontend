@@ -83,7 +83,7 @@ export default class Forgot extends Component {
                     case 'EmailExsists':
 
                         if (res.data.Exists) {
-                            
+
                             firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
 
                                 alertify.success("Check mail! ,Password reset email sent to " + this.state.email);
@@ -95,6 +95,7 @@ export default class Forgot extends Component {
 
                         } else {
                             alertify.error("Email is not exist");
+                            this.services.offsocket();
                         }
 
                         break;

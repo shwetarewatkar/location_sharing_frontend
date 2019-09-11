@@ -7,7 +7,7 @@ import Service from '../../Services/service';
 import Auth from '../../Authantication/Auth';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
-
+import moment from 'moment';
 
 export default class People extends React.Component {
 
@@ -25,7 +25,9 @@ export default class People extends React.Component {
             uid: '',
             removemodelshow: false,
             removeid: '',
-            defaultdata: []
+            defaultdata: [],
+            disdetail: false,
+            userupdatedata:[]
         };
 
         this.auth.authantication();
@@ -112,12 +114,67 @@ export default class People extends React.Component {
 
     }
 
+    getdetail(id) {
+
+        this.setState({
+            disdetail: true
+        })
+        this.state.disdetail = true;
+
+
+        var data = {
+            uid: id
+        }
+
+        this.setState({
+            userupdatedata: []
+        });
+
+        this.services.senddata('userDetails', data);
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'userDetails':
+                    this.setState({
+                        userupdatedata: res.data
+                    })
+                    let userArray = []
+                    for (var i = 0; i < res.data.length; i++) {
+                        let decryptedData_lat = res.data[i].latitude;
+                        var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                        var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8))
+
+                        let decryptedData_long = res.data[i].longitude;
+                        var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                        var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                        var timestamp = res.data[i].cd;
+                        let obj = {
+                            lat: parseFloat(lat).toFixed(4),
+                            long: parseFloat(long).toFixed(4),
+                            cd: timestamp
+                        }
+                        userArray.push(obj)
+                    }
+
+                    this.setState({
+                        userupdatedata: userArray
+                    });
+
+                    break;
+            }
+        });
+
+    }
+
     onCloseModel() {
         this.setState({
-            removemodelshow: false
+            removemodelshow: false,
+            disdetail: false
         })
         this.state.removemodelshow = false;
+        this.state.disdetail = false;
     }
+
 
     render() {
 
@@ -152,7 +209,9 @@ export default class People extends React.Component {
                                                             this.state.peoples.map(function (obj, i) {
                                                                 return (
                                                                     <tr key={i}>
-                                                                        <td>{obj.username}</td>
+                                                                        <td>
+                                                                            <span className="btn-hover" onClick={this.getdetail.bind(this, obj.uid)}>{obj.username}</span>
+                                                                        </td>
                                                                         <td>
                                                                             <span onClick={this.onRemove.bind(this, obj.uid)} className="btn btn-danger btn-hover">
                                                                                 <i className="fas fa-times"></i>
@@ -198,6 +257,62 @@ export default class People extends React.Component {
                         </div>
                         {
                             (this.state.removemodelshow) ? <div className="modal-backdrop fade show"></div> : ''
+                        }
+
+                        <div className={(this.state.disdetail) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+
+                                <div className="modal-content">
+                                    <form onSubmit={this.onSubmit}>
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalCenterTitle">Members Details</h5>
+                                            <button type="button" className="close" onClick={this.onCloseModel} data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Latitude</th>
+                                                        <th>Longitude</th>
+                                                        <th>Timestamp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    {(this.state.userupdatedata) ?
+                                                        this.state.userupdatedata.map(function (obj, i) {
+                                                            return (
+                                                                <tr key={i}>
+                                                                    <td>
+                                                                        <span>{obj.long}</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span>{obj.lat}</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span>{moment(obj.cd).format('DD-MM-YYYY HH:mm:ss')}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        }, this)
+                                                        : ''
+                                                    }
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary" onClick={this.onCloseModel} data-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                        {
+                            (this.state.disdetail) ? <div className="modal-backdrop fade show"></div> : ''
                         }
 
                     </div>
