@@ -15,6 +15,7 @@ export default class Service extends Component {
         return axios.post(`${this.apiURL}/location/add`, data);
     }
 
+    
     senddata(e, Data) {
         // console.log("req:- ", { event: e, data: Data });
         return socket.emit('req', { event: e, data: Data });
