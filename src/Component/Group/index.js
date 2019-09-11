@@ -549,10 +549,10 @@ export default class Groups extends React.Component {
                                                     return (
                                                         <tr key={i}>
                                                             <td>
-                                                                <span>{obj.lat}</span>
+                                                                <span>{obj.long}</span>
                                                             </td>
                                                             <td>
-                                                                <span>{obj.long}</span>
+                                                                <span>{obj.lat}</span>
                                                             </td>
                                                             <td>
                                                                 <span>{obj.cd}</span>

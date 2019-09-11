@@ -63,6 +63,13 @@ class Login extends Component {
         // console.log("latitude new user:- ", latitude.toString());
         // console.log("longitude new user:- ", longitude.toString());
 
+        var load = localStorage.getItem('load');
+        if (load) {
+            window.location.reload();
+            localStorage.removeItem('load');
+        }
+
+
     }
 
     onChangeEmail(e) {

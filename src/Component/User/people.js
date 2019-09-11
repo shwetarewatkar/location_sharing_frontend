@@ -30,8 +30,6 @@ export default class People extends React.Component {
 
         this.auth.authantication();
 
-
-
     }
 
     componentDidMount() {
@@ -50,68 +48,26 @@ export default class People extends React.Component {
 
     getAllPeople(userid) {
 
-        this.services.senddata('GetGroupsList', '');
+        let decryptedData_uid = localStorage.getItem('uid');
+        var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
+        var userid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
+
+        var data = {
+            uid: userid
+        }
+
+        this.services.senddata('GetPeopleList', data);
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
-                case 'GroupList':
+                case 'PeopleList':
 
-                    res.data.forEach((item, i) => {
-
-                        if (item.default) {
-
-                            var data = {
-                                uid: this.state.uid,
-                                GroupId: item._id
-                            }
-
-                            this.services.senddata('GetMemeberList', data);
-                            this.services.getdata().subscribe((res) => {
-                                switch (res.event) {
-                                    case 'GroupMemberList':
-
-                                        res.data.MemberList.forEach((mitem, m) => {
-                                            if (this.state.uid != mitem.uid) {
-                                                this.setState({
-                                                    defaultdata: res.data.MemberList,
-                                                    removeid: '',
-                                                    removemodelshow: false
-                                                })
-                                                this.state.removemodelshow = false;
-                                            }
-                                        });
-
-                                        break;
-                                }
-                            });
-
-                        }
-
-
-                    });
+                    this.setState({
+                        peoples: res.data
+                    })
 
                     break;
             }
         });
-
-        // var data = {
-        //     uid: userid
-        // }
-
-        // this.services.senddata('GetPeopleList', data);
-        // this.services.getdata().subscribe((res) => {
-        //     switch (res.event) {
-
-        //         case 'PeopleList':
-        //             this.setState({
-        //                 peoples: res.data,
-        //                 removeid: '',
-        //                 removemodelshow: false
-        //             })
-        //             this.state.removemodelshow = false;
-
-        //             break;
-        //     }
-        // });
     }
 
     onRemove(id) {
@@ -141,48 +97,6 @@ export default class People extends React.Component {
 
         alertify.success("Deleted Successfully");
 
-        this.services.senddata('GetGroupsList', '');
-        this.services.getdata().subscribe((res) => {
-            switch (res.event) {
-                case 'GroupList':
-
-                    res.data.forEach((item, i) => {
-
-                        if (item.default) {
-
-                            var data = {
-                                uid: this.state.uid,
-                                GroupId: item._id
-                            }
-
-                            this.services.senddata('GetMemeberList', data);
-                            this.services.getdata().subscribe((res) => {
-                                switch (res.event) {
-                                    case 'GroupMemberList':
-
-                                        if (this.state.uid != res.data.MemberList[i].uid) {
-
-                                            this.setState({
-                                                defaultdata: res.data.MemberList,
-                                                removeid: '',
-                                                removemodelshow: false
-                                            })
-                                            this.state.removemodelshow = false;
-                                        }
-
-                                        break;
-                                }
-                            });
-
-                        }
-
-
-                    });
-
-                    break;
-            }
-        });
-
         // this.services.getdata().subscribe((res) => {
         //     switch (res.event) {
         //         case 'PeopleList':
@@ -206,7 +120,7 @@ export default class People extends React.Component {
     }
 
     render() {
-     
+
         return (
 
             <div id="wrapper">
@@ -234,28 +148,16 @@ export default class People extends React.Component {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {this.state.defaultdata ?
-                                                            this.state.defaultdata.map(function (obj, i) {
+                                                        {this.state.peoples ?
+                                                            this.state.peoples.map(function (obj, i) {
                                                                 return (
                                                                     <tr key={i}>
-                                                                        {
-                                                                            (this.state.uid == obj.uid) ?
-                                                                                ''
-                                                                                :
-                                                                                <td>{obj.username}</td>
-                                                                        }
-
-
-                                                                        {
-                                                                            (this.state.uid == obj.uid) ?
-                                                                                ''
-                                                                                : <td>
-                                                                                    <span onClick={this.onRemove.bind(this, obj.uid)} className="btn btn-danger btn-hover">
-                                                                                        <i className="fas fa-times"></i>
-                                                                                    </span></td>
-                                                                        }
-
-
+                                                                        <td>{obj.username}</td>
+                                                                        <td>
+                                                                            <span onClick={this.onRemove.bind(this, obj.uid)} className="btn btn-danger btn-hover">
+                                                                                <i className="fas fa-times"></i>
+                                                                            </span>
+                                                                        </td>
                                                                     </tr>
                                                                 )
                                                             }, this)

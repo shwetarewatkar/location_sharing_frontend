@@ -43,6 +43,7 @@ export default class User extends React.Component {
             longitude: ''
         }
 
+
         setInterval(() => {
             // console.log("callin in");
 
@@ -50,13 +51,13 @@ export default class User extends React.Component {
             if (!decryptedData_uid) {
                 return false;
             }
-            
+
             var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
             var userid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
 
 
             let decryptedData_latitude = localStorage.getItem('latitude');
-            
+
             var bytes_latitude = CryptoJS.AES.decrypt(decryptedData_latitude.toString(), 'Location-Sharing');
             var current_latchar = JSON.parse(bytes_latitude.toString(CryptoJS.enc.Utf8));
 
@@ -125,10 +126,6 @@ export default class User extends React.Component {
             }
 
         }, 600000)
-
-
-
-
 
     }
 
@@ -423,13 +420,88 @@ export default class User extends React.Component {
 
             this.services.senddata('AddToDefult', data);
             this.services.getdata().subscribe((res) => {
+
                 switch (res.event) {
                     case 'AddDefaultMemebrResp':
 
                         if (res.data.status == true) {
+
                             this.setState({
                                 invite: ''
                             });
+
+                            this.services.senddata('GetGroupsList', '');
+                            this.services.getdata().subscribe((res) => {
+                                switch (res.event) {
+                                    case 'GroupList':
+                                        for (var i = 0; i < markers.length; i++) {
+                                            markers[i].setMap(null);
+                                        }
+                                        console.log("--------------> ", res.data);
+
+                                        // res.data.forEach((item, i) => {
+
+                                        //     if (item.default) {
+
+                                        //         for (var i = 0; i < markers.length; i++) {
+                                        //             markers[i].setMap(null);
+                                        //         }
+
+                                        //         var data = {
+                                        //             uid: this.state.uid,
+                                        //             GroupId: item._id
+                                        //         }
+
+                                        //         this.services.senddata('GetMemeberList', data);
+                                        //         this.services.getdata().subscribe((res) => {
+                                        //             switch (res.event) {
+                                        //                 case 'GroupMemberList':
+
+                                        //                     res.data.MemberList.forEach((items, ii) => {
+
+                                        //                         let decryptedData_lat = items.latitude;
+                                        //                         var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                        //                         var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+
+                                        //                         let decryptedData_long = items.longitude;
+                                        //                         var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                        //                         var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+
+                                        //                         var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+
+                                        //                         marker = new window.google.maps.Marker({
+                                        //                             position: uluru,
+                                        //                             map: map,
+                                        //                             title: items.username
+                                        //                         })
+
+                                        //                         var content = '<div id="content">' +
+                                        //                             '<h6>' + items.username + '</h6>' +
+                                        //                             '</div>';
+                                        //                         var infowindow = new window.google.maps.InfoWindow();
+
+                                        //                         window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                                        //                             return function () {
+                                        //                                 infowindow.setContent(content);
+                                        //                                 infowindow.open(map, marker);
+                                        //                                 map.setCenter(marker.getPosition());
+                                        //                             };
+                                        //                         })(marker, content, infowindow));
+
+
+                                        //                         markers.push(marker)
+
+                                        //                     })
+
+                                        //                     break;
+                                        //             }
+                                        //         });
+                                        //     }
+                                        // })
+                                        break;
+                                }
+                            });
+
                             alertify.success(res.data.message);
                         } else {
                             this.setState({
@@ -456,7 +528,6 @@ export default class User extends React.Component {
     getAllLocations() {
 
         // let self = this
-
 
         infoWindow = new window.google.maps.InfoWindow();
         if (navigator && navigator.geolocation) {
@@ -550,7 +621,7 @@ export default class User extends React.Component {
                                                         <input type="text" value={this.state.sharelink} onChange={this.onChangeShareLink} className="form-control" placeholder="Invite Your Friends" />
                                                         <div className="input-group-append">
                                                             <button className="btn btn-success" type="button" onClick={this.copyToClipboard.bind(this, this.state.sharelink)}>
-                                                                Share Link
+                                                                Copy Link
                                                                 </button>
                                                         </div>
                                                     </div>

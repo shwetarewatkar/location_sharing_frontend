@@ -24,7 +24,7 @@ export default class Service extends Component {
     getdata() {
         return Observable.create((observer) => {
             socket.on('res', (data) => {
-                // console.log("service:- ", data);
+                // console.log("service all:- ", data);
                 observer.next(data);
             });
         });
@@ -34,3 +34,5 @@ export default class Service extends Component {
 
 
 
+// TeUvv0
+// 2NQg2i

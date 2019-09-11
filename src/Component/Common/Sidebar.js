@@ -98,6 +98,7 @@ export default class Sidebar extends React.Component {
         }
 
         this.services.senddata('LogoutEvent', data);
+        localStorage.setItem('load', '1');
         history.push('/');
     }
 
