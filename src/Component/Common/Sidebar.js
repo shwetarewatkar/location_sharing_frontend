@@ -19,9 +19,31 @@ export default class Sidebar extends React.Component {
         this.logOut = this.logOut.bind(this);
         this.services = new Service();
 
+        this.state = {
+            mobileView: false,
+            showSidebar: true
+        };
+        this.updateViewState = this.updateViewState.bind(this);
+    }
+
+    updateViewState() {
+        if (!this.state.mobileView && document.documentElement.clientWidth < 1024) {
+            this.setState({
+                mobileView: true,
+                showSidebar: false
+            });
+
+        } else {
+            this.setState({
+                mobileView: false,
+                showSidebar: true
+            });
+        }
     }
 
     componentDidMount() {
+
+        this.updateViewState();
 
         if (window.location.pathname == '/user') {
 
@@ -106,7 +128,8 @@ export default class Sidebar extends React.Component {
 
         return (
 
-            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion collapse show" id="accordionSidebar">
+            <ul className={(this.state.showSidebar) ? 'navbar-nav bg-gradient-primary sidebar sidebar-dark' : 'navbar-nav bg-gradient-primary sidebar sidebar-dark collapse'} id="accordionSidebar">
+                {/* <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark collapse show" id="accordionSidebar"></ul> */}
 
                 <Link className="sidebar-brand d-flex align-items-center justify-content-center" to={'/user'}>
                     <div className="sidebar-brand-icon rotate-n-15">

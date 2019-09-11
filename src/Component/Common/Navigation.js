@@ -42,8 +42,6 @@ export default class Navigation extends React.Component {
                     <i className="fa fa-bars"></i>
                 </button>
 
-                {/* <button className="btn btn-primary" id="menu-toggle"><i className="fa fa-bars"></i></button> */}
-
                 <ul className="navbar-nav ml-auto">
 
                     <li className="nav-item">

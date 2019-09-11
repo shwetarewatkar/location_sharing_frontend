@@ -8,8 +8,6 @@ import Auth from '../../Authantication/Auth';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
-
-
 export default class Groups extends React.Component {
 
     constructor(props) {
