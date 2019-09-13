@@ -1,9 +1,12 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Service from '../../Services/service';
 import CryptoJS from 'crypto-js';
 import history from '../../History';
 
+// Declare globle variable it's user for hightlight current page 
 
 var setuser = false;
 var setpeople = false;
@@ -12,34 +15,26 @@ var setsetting = false;
 
 export default class Sidebar extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
 
+        // Declare some methods, state variables and class objects use for this page
+
         this.Class = this.Class.bind(this);
         this.logOut = this.logOut.bind(this);
+        this.updateViewState = this.updateViewState.bind(this);
         this.services = new Service();
 
         this.state = {
             mobileView: false,
             showSidebar: true
         };
-        this.updateViewState = this.updateViewState.bind(this);
+
     }
 
-    updateViewState() {
-        if (!this.state.mobileView && document.documentElement.clientWidth < 1024) {
-            this.setState({
-                mobileView: true,
-                showSidebar: false
-            });
-
-        } else {
-            this.setState({
-                mobileView: false,
-                showSidebar: true
-            });
-        }
-    }
+    // Declare componentDidMount method for set responsive sidebar and highlight current page
 
     componentDidMount() {
 
@@ -76,6 +71,25 @@ export default class Sidebar extends React.Component {
         }
     }
 
+    // Declare updateViewState for responsive sidebar 
+
+    updateViewState() {
+        if (!this.state.mobileView && document.documentElement.clientWidth < 1024) {
+            this.setState({
+                mobileView: true,
+                showSidebar: false
+            });
+
+        } else {
+            this.setState({
+                mobileView: false,
+                showSidebar: true
+            });
+        }
+    }
+
+    // Declare Class method for get current path 
+
     Class(path) {
 
         if (path == 'user') {
@@ -109,6 +123,8 @@ export default class Sidebar extends React.Component {
         }
     }
 
+    // Declare logOut method for logout your account and calling socket to remove socket id
+
     logOut = (e) => {
 
         let decryptedData_uid = localStorage.getItem('uid');
@@ -124,12 +140,13 @@ export default class Sidebar extends React.Component {
         history.push('/');
     }
 
+    // Render HTML page and return it
+
     render() {
 
         return (
 
             <ul className={(this.state.showSidebar) ? 'navbar-nav bg-gradient-primary sidebar sidebar-dark' : 'navbar-nav bg-gradient-primary sidebar sidebar-dark collapse'} id="accordionSidebar">
-                {/* <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark collapse show" id="accordionSidebar"></ul> */}
 
                 <Link className="sidebar-brand d-flex align-items-center justify-content-center" to={'/user'}>
                     <div className="sidebar-brand-icon rotate-n-15">

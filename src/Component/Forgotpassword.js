@@ -1,3 +1,5 @@
+// Import require modules
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
@@ -6,11 +8,14 @@ import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
 
-
 export default class Forgot extends Component {
+
+    // Declare constructor 
 
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods, firebase configuration and class objects for use this page
 
         this.services = new Service();
         this.onChangeEmail = this.onChangeEmail.bind(this);
@@ -35,15 +40,21 @@ export default class Forgot extends Component {
 
     }
 
+    // Declare componentDidMount method for mount some data and methods on load this page
+
     componentDidMount() {
         this.removeLocalstorage();
     }
+
+    // Declare onChangeEmail method for set value of email
 
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
         });
     }
+
+    // Declare removeLocalstorage method for remove all localstorage value
 
     removeLocalstorage() {
         localStorage.removeItem("uid");
@@ -53,6 +64,8 @@ export default class Forgot extends Component {
         localStorage.removeItem("latitude");
         localStorage.removeItem("longitude");
     }
+
+    // Declare onSubmit method for send mail confirmation and change password link
 
     onSubmit(e) {
         e.preventDefault();
@@ -107,6 +120,8 @@ export default class Forgot extends Component {
         }
 
     }
+
+    // Render HTML page and return it
 
     render() {
         return (

@@ -1,3 +1,6 @@
+
+// Import Require Modules
+
 import React, { Component } from 'react';
 import Service from '../Services/service';
 import CryptoJS from 'crypto-js';
@@ -5,69 +8,75 @@ import alertify from 'alertifyjs';
 
 export default class Auth extends React.Component {
 
+    // Declare Constructor
+
     constructor(props) {
         super(props);
+
+        // Create Object Of Service Class
 
         this.services = new Service();
 
     }
 
+    // Declare Authantication Function Reconnect to Socket
+
     authantication() {
 
+        // Get Localstorage Value For Reconnect to Socket
+
         let decryptedData_uid = localStorage.getItem('uid');
-        if (decryptedData_uid) {
+        let decryptedData_email = localStorage.getItem('email');
+        let decryptedData_username = localStorage.getItem('username');
+        let decryptedData_latitude = localStorage.getItem('latitude');
+        let decryptedData_longitude = localStorage.getItem('longitude');
+
+        if (decryptedData_uid != null || decryptedData_email != null || decryptedData_username != null || decryptedData_latitude != null || decryptedData_longitude != null) {
+
             var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
             var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
-        }
 
-
-        let decryptedData_email = localStorage.getItem('email');
-        if (decryptedData_email) {
             var bytes_email = CryptoJS.AES.decrypt(decryptedData_email.toString(), 'Location-Sharing');
             var email = JSON.parse(bytes_email.toString(CryptoJS.enc.Utf8));
-        }
 
-        let decryptedData_username = localStorage.getItem('username');
-        if (decryptedData_username) {
             var bytes_username = CryptoJS.AES.decrypt(decryptedData_username.toString(), 'Location-Sharing');
             var username = JSON.parse(bytes_username.toString(CryptoJS.enc.Utf8));
-        }
 
-        let decryptedData_longitude = localStorage.getItem('longitude');
-        if (decryptedData_longitude) {
-            var bytes_longitude = CryptoJS.AES.decrypt(decryptedData_longitude.toString(), 'Location-Sharing');
-            var latchar = JSON.parse(bytes_longitude.toString(CryptoJS.enc.Utf8));
-        }
-
-        let decryptedData_latitude = localStorage.getItem('latitude');
-        if (decryptedData_latitude) {
             var bytes_latitude = CryptoJS.AES.decrypt(decryptedData_latitude.toString(), 'Location-Sharing');
             var longchar = JSON.parse(bytes_latitude.toString(CryptoJS.enc.Utf8));
-        }
 
+            var bytes_longitude = CryptoJS.AES.decrypt(decryptedData_longitude.toString(), 'Location-Sharing');
+            var latchar = JSON.parse(bytes_longitude.toString(CryptoJS.enc.Utf8));
 
-        var data = {
-            uid: uid,
-            email: email,
-            username: username,
-            latitude: decryptedData_longitude,
-            longitude: decryptedData_latitude,
-            status: false
-            // latitude: longchar,
-            // longitude: latchar
-        }
-
-        this.services.senddata('Auth', data);
-        this.services.getdata().subscribe((res) => {
-            switch (res.event) {
-                case 'Auth_Status':
-
-                    // console.log("res auth data:- ", res.data);
-
-                    // alertify.success("Login Suuccessfully");
-                    break;
+            var data = {
+                uid: uid,
+                email: email,
+                username: username,
+                latitude: decryptedData_latitude,
+                longitude: decryptedData_longitude,
+                status: false
+                // latitude: longchar,
+                // longitude: latchar
             }
-        });
+
+            // Connect Socket Event Auth And Get Response on Auth_Status Event
+
+            this.services.connect('Auth', data);
+            this.services.getdata().subscribe((res) => {
+                switch (res.event) {
+                    case 'Auth_Status':
+                        break;
+                }
+            });
+
+        } else {
+
+            // Disconnect Socket If User Remove Localstorage Value That Time Disconnect Socket
+
+            this.services.disconnect();
+
+        }
+
     }
 
 }

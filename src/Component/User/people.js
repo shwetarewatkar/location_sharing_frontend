@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Common/Sidebar';
@@ -11,8 +13,12 @@ import moment from 'moment';
 
 export default class People extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods and class objects for use this page
 
         this.services = new Service();
         this.auth = new Auth();
@@ -27,12 +33,14 @@ export default class People extends React.Component {
             removeid: '',
             defaultdata: [],
             disdetail: false,
-            userupdatedata:[]
+            userupdatedata: []
         };
 
         this.auth.authantication();
 
     }
+
+    // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount() {
 
@@ -47,6 +55,8 @@ export default class People extends React.Component {
         this.getAllPeople(userid);
 
     }
+
+    // Declare getAllPeople method for get all people which added in default group
 
     getAllPeople(userid) {
 
@@ -72,6 +82,8 @@ export default class People extends React.Component {
         });
     }
 
+    // Declare onRemove method for open confirmation model of delete people
+
     onRemove(id) {
 
         this.setState({
@@ -81,6 +93,8 @@ export default class People extends React.Component {
         this.state.removemodelshow = true;
 
     }
+
+    // Declare onDeleteSubmit method for delete people
 
     onDeleteSubmit(e) {
         e.preventDefault();
@@ -113,6 +127,8 @@ export default class People extends React.Component {
         // });
 
     }
+
+    // Declare getdetail method for get details latitude and longitude of people
 
     getdetail(id) {
 
@@ -166,6 +182,8 @@ export default class People extends React.Component {
 
     }
 
+    // Declare onCloseModel method for close model of delete confirmation
+
     onCloseModel() {
         this.setState({
             removemodelshow: false,
@@ -175,6 +193,7 @@ export default class People extends React.Component {
         this.state.disdetail = false;
     }
 
+    // Render HTML page and return it
 
     render() {
 
@@ -232,6 +251,8 @@ export default class People extends React.Component {
 
                         </div>
 
+                        {/* Delete people confirmation model */}
+
                         <div className={(this.state.removemodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">
 
@@ -258,6 +279,10 @@ export default class People extends React.Component {
                         {
                             (this.state.removemodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                         }
+
+                        {/* END */}
+
+                        {/* Display details of people on model */}
 
                         <div className={(this.state.disdetail) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">
@@ -286,10 +311,10 @@ export default class People extends React.Component {
                                                             return (
                                                                 <tr key={i}>
                                                                     <td>
-                                                                        <span>{obj.long}</span>
+                                                                        <span>{obj.lat}</span>
                                                                     </td>
                                                                     <td>
-                                                                        <span>{obj.lat}</span>
+                                                                        <span>{obj.long}</span>
                                                                     </td>
                                                                     <td>
                                                                         <span>{moment(obj.cd).format('DD-MM-YYYY HH:mm:ss')}</span>
@@ -314,6 +339,8 @@ export default class People extends React.Component {
                         {
                             (this.state.disdetail) ? <div className="modal-backdrop fade show"></div> : ''
                         }
+
+                        {/* END */}
 
                     </div>
 

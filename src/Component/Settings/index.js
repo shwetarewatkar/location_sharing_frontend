@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Common/Sidebar';
@@ -12,8 +14,12 @@ import CryptoJS from 'crypto-js';
 
 export default class Setting extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods, firebase configration and class objects for use this page
 
         this.services = new Service();
         this.auth = new Auth();
@@ -25,7 +31,6 @@ export default class Setting extends React.Component {
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeRepassword = this.onChangeRepassword.bind(this);
-        this.onChangeSubmit = this.onChangeSubmit.bind(this);
 
         this.state = {
             deletepopupshow: false,
@@ -68,11 +73,15 @@ export default class Setting extends React.Component {
 
     }
 
+    // Declare onChangeEmail event for set value of email
+
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
         });
     }
+
+    // Declare onChangePassword event for set value of password
 
     onChangePassword(e) {
         this.setState({
@@ -80,11 +89,15 @@ export default class Setting extends React.Component {
         });
     }
 
+    // Declare onChangeRepassword event for set value of repassword
+
     onChangeRepassword(e) {
         this.setState({
             repassword: e.target.value
         });
     }
+
+    // Declare onSubmit method for send mail and change your pasword
 
     onSubmit(e) {
         e.preventDefault();
@@ -152,65 +165,7 @@ export default class Setting extends React.Component {
         }
     }
 
-    onChangeSubmit(e) {
-        e.preventDefault();
-
-        if (this.state.password == '') {
-            this.setState({
-                errpass: false
-            });
-            this.state.errpass = false;
-        } else {
-            this.setState({
-                errpass: true
-            });
-            this.state.errpass = true;
-        }
-
-        if (this.state.repassword == '') {
-            this.setState({
-                errrepass: false
-            });
-            this.state.errrepass = false;
-        } else {
-
-            if (this.state.repassword == this.state.password) {
-                this.setState({
-                    errrepass: true
-                });
-                this.state.errrepass = true;
-            } else {
-                this.setState({
-                    errrepass: false
-                });
-                this.state.errrepass = false;
-            }
-
-        }
-
-        var user = firebase.auth().currentUser;
-
-        if (this.state.errpass == true && this.state.errrepass == true) {
-
-            var newPassword = this.state.password;
-
-            user.updatePassword(newPassword).then(() => {
-
-                this.setState({
-                    showbtn: false
-                })
-                this.state.showbtn = false;
-
-                this.props.history.push('/');
-
-            }).catch(function (error) {
-                console.log(error);
-            });
-
-        }
-
-    }
-
+    // Declare onDeleteAccountPop method for open model of current login account delete confirmation 
 
     onDeleteAccountPop() {
         this.setState({
@@ -218,6 +173,8 @@ export default class Setting extends React.Component {
         })
         this.state.deletepopupshow = true;
     }
+
+    // Declare onAccountSubmit method for delete account from our database and firbase also
 
     onAccountSubmit(e) {
         e.preventDefault();
@@ -250,12 +207,16 @@ export default class Setting extends React.Component {
 
     }
 
+    // Declare onCloseModel method for close model of account delete confirmation
+
     onCloseModel() {
         this.setState({
             deletepopupshow: false,
         })
         this.state.deletepopupshow = false;
     }
+
+    // Render HTML page and return it
 
     render() {
         return (
@@ -354,6 +315,8 @@ export default class Setting extends React.Component {
                             </div>
                         </div>
 
+                        {/* Delete account confirmation model */}
+
                         <div className={(this.state.deletepopupshow) ? 'modal fade show disblock' : 'modal fade disnone'} id="newgroup" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">
 
@@ -380,6 +343,9 @@ export default class Setting extends React.Component {
                         {
                             (this.state.deletepopupshow) ? <div className="modal-backdrop fade show"></div> : ''
                         }
+
+                        {/* END */}
+
                     </div>
 
                     <Footer />

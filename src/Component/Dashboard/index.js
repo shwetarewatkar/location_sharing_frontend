@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Common/Sidebar';
@@ -5,6 +7,8 @@ import Navigation from '../Common/Navigation';
 import Footer from '../Common/Footer';
 
 export default class Index extends React.Component {
+
+    // Render HTML page and return it
 
     render() {
         return (

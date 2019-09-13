@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Common/Sidebar';
@@ -11,8 +13,13 @@ import moment from 'moment';
 
 export default class Groups extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods and class objects for use this page
+
         this.state = {
             groups: [],
             members: [],
@@ -35,6 +42,7 @@ export default class Groups extends React.Component {
 
         this.services = new Service();
         this.auth = new Auth();
+
         this.onChangeInviteCode = this.onChangeInviteCode.bind(this);
         this.onJoinSubmit = this.onJoinSubmit.bind(this);
         this.onGroupSubmit = this.onGroupSubmit.bind(this);
@@ -46,14 +54,41 @@ export default class Groups extends React.Component {
         this.onAddNewGroup = this.onAddNewGroup.bind(this);
         this.onRemoveDeleteSubmit = this.onRemoveDeleteSubmit.bind(this);
 
-        this.auth.authantication();
-
     }
+
+    // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount() {
         this.getAllGroups();
+        this.auth.authantication();
+    }
+
+    // Declare getAllGroups method for get all group of user
+
+    getAllGroups() {
+
+        let decryptedData_uid = localStorage.getItem('uid');
+        var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
+        var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
+
+        this.setState({
+            uid: uid
+        })
+
+        this.services.senddata('GetGroupsList', '');
+        this.services.getdata().subscribe((res) => {
+            switch (res.event) {
+                case 'GroupList':
+                    this.setState({
+                        groups: res.data
+                    })
+                    break;
+            }
+        });
 
     }
+
+    // Declare onChange event for set value of invitecode
 
     onChangeInviteCode(e) {
         this.setState({
@@ -61,11 +96,15 @@ export default class Groups extends React.Component {
         });
     }
 
+    // Declare onChange event for set value of groupname
+
     onChangeGroupName(e) {
         this.setState({
             groupname: e.target.value
         });
     }
+
+    // Declare onJoinSubmit method for add user to our group
 
     onJoinSubmit(e) {
         e.preventDefault();
@@ -118,6 +157,8 @@ export default class Groups extends React.Component {
 
     }
 
+    // Declare onGroupSubmit method for add new group
+
     onGroupSubmit(e) {
         e.preventDefault();
 
@@ -152,28 +193,7 @@ export default class Groups extends React.Component {
 
     }
 
-    getAllGroups() {
-
-        let decryptedData_uid = localStorage.getItem('uid');
-        var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');
-        var uid = JSON.parse(bytes_uid.toString(CryptoJS.enc.Utf8));
-
-        this.setState({
-            uid: uid
-        })
-
-        this.services.senddata('GetGroupsList', '');
-        this.services.getdata().subscribe((res) => {
-            switch (res.event) {
-                case 'GroupList':
-                    this.setState({
-                        groups: res.data
-                    })
-                    break;
-            }
-        });
-
-    }
+    // Declare delgroupdata method for open confirmation model to delete group
 
     delgroupdata(id) {
 
@@ -185,6 +205,8 @@ export default class Groups extends React.Component {
         this.state.groupdeletemodelshow = true;
 
     }
+
+    // Declare onDeleteSubmit method for delete group
 
     onDeleteSubmit(e) {
 
@@ -205,6 +227,8 @@ export default class Groups extends React.Component {
 
     }
 
+    // Declare getgroupdata method for add member in group on model
+
     getgroupdata(id, name) {
         this.setState({
             gid: id,
@@ -214,6 +238,8 @@ export default class Groups extends React.Component {
 
         this.state.groupmodelshow = true;
     }
+
+    // Declare onGetdata method for list member of group on model
 
     onGetdata(id, name) {
 
@@ -243,6 +269,8 @@ export default class Groups extends React.Component {
 
     }
 
+    // Declare getdetail method for get details of lat, long of member on model
+
     getdetail(id) {
 
         this.setState({
@@ -263,8 +291,7 @@ export default class Groups extends React.Component {
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
                 case 'userDetails':
-
-                    console.log("alldata history:- ", res.data);
+                    
                     this.setState({
                         userupdatedata: res.data
                     })
@@ -297,6 +324,8 @@ export default class Groups extends React.Component {
 
     }
 
+    // Declare onRemoveMember method for open confirmation model of remove member
+
     onRemoveMember(rmid) {
 
         this.setState({
@@ -309,6 +338,8 @@ export default class Groups extends React.Component {
         this.state.disgmembershow = false;
 
     }
+
+    // Declare onRemoveDeleteSubmit method for remove member from group
 
     onRemoveDeleteSubmit(e) {
         e.preventDefault();
@@ -338,12 +369,16 @@ export default class Groups extends React.Component {
 
     }
 
+    // Declare onAddNewGroup method for open model of add new group
+
     onAddNewGroup() {
         this.setState({
             addnewgroupmodelshow: true
         })
         this.state.addnewgroupmodelshow = true;
     }
+
+    // Declare onCloseModel method for close all model
 
     onCloseModel() {
         this.setState({
@@ -362,12 +397,16 @@ export default class Groups extends React.Component {
         this.state.disdetail = false;
     }
 
+    // Declare onCloseMemberModel method for close member model 
+
     onCloseMemberModel() {
         this.setState({
             disdetail: false
         })
         this.state.disdetail = false;
     }
+
+    // Render HTML page and return it
 
     render() {
 
@@ -438,6 +477,10 @@ export default class Groups extends React.Component {
                     </div>
                     <Footer />
                 </div>
+
+
+                {/* open model for add new member in specific group */}
+
                 <div className={(this.state.groupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmodel" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
@@ -475,6 +518,10 @@ export default class Groups extends React.Component {
                 {
                     (this.state.groupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
+
+                {/* END */}
+
+                {/* open model for display member of specific group */}
 
                 <div className={(this.state.disgmembershow) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
@@ -527,6 +574,10 @@ export default class Groups extends React.Component {
                     (this.state.disgmembershow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
 
+                {/* END */}
+
+                {/* open model for member details */}
+
                 <div className={(this.state.disdetail) ? 'modal fade show disblock' : 'modal fade disnone'} id="groupmember" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
@@ -554,10 +605,10 @@ export default class Groups extends React.Component {
                                                     return (
                                                         <tr key={i}>
                                                             <td>
-                                                                <span>{obj.long}</span>
+                                                                <span>{obj.lat}</span>
                                                             </td>
                                                             <td>
-                                                                <span>{obj.lat}</span>
+                                                                <span>{obj.long}</span>
                                                             </td>
                                                             <td>
                                                                 <span>{moment(obj.cd).format('DD-MM-YYYY HH:mm:ss')}</span>
@@ -582,6 +633,10 @@ export default class Groups extends React.Component {
                 {
                     (this.state.disdetail) ? <div className="modal-backdrop fade show"></div> : ''
                 }
+
+                {/* END */}
+
+                {/* open model for delete confirmation */}
 
                 <div className={(this.state.groupdeletemodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
@@ -610,6 +665,9 @@ export default class Groups extends React.Component {
                     (this.state.groupdeletemodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
 
+                {/* END */}
+
+                {/* open model for add new group */}
 
                 <div className={(this.state.addnewgroupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} id="newgroup" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
@@ -647,6 +705,10 @@ export default class Groups extends React.Component {
                     (this.state.addnewgroupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
 
+                {/* END */}
+
+                {/* open model for delete member confirmation */}
+
                 <div className={(this.state.removegroupmodelshow) ? 'modal fade show disblock' : 'modal fade disnone'} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
 
@@ -673,6 +735,8 @@ export default class Groups extends React.Component {
                 {
                     (this.state.removegroupmodelshow) ? <div className="modal-backdrop fade show"></div> : ''
                 }
+
+                {/* END */}
 
             </div>
 

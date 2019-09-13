@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Common/Sidebar';
@@ -8,17 +10,23 @@ import Auth from '../../Authantication/Auth';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
+// Declare globle variables to use this page
 
 var map, marker, infoWindow, bounds;
 var pos = []
 var markers = [];
 var userGroupids = "";
 var currentGroupid = "";
+var lastWindow = null;
 
 export default class User extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods and class objects for use this page
 
         this.services = new Service();
         this.auth = new Auth();
@@ -43,9 +51,9 @@ export default class User extends React.Component {
             longitude: ''
         }
 
+        // this interval set 10 minutes and trace current location of login user
 
         setInterval(() => {
-            // console.log("callin in");
 
             let decryptedData_uid = localStorage.getItem('uid');
             if (!decryptedData_uid) {
@@ -65,33 +73,16 @@ export default class User extends React.Component {
             var bytes_longitude = CryptoJS.AES.decrypt(decryptedData_longitude.toString(), 'Location-Sharing');
             var current_longchar = JSON.parse(bytes_longitude.toString(CryptoJS.enc.Utf8));
 
-            console.log("current latitude:- ", current_latchar);
-            console.log("current longitude:- ", current_longchar);
-
             const location = window.navigator && window.navigator.geolocation
 
             if (location) {
-                this.setState({ showAlert: false })
+
                 location.getCurrentPosition((position) => {
 
                     this.setState({
                         latitude: position.coords.longitude.toString(),
                         longitude: position.coords.latitude.toString(),
                     })
-
-                    // var latest_latitude = position.coords.latitude.toString();
-                    // var latest_longitude = position.coords.longitude.toString();
-
-
-                    console.log("letest longitude:- ", this.state.longitude);
-                    console.log("latest latitude:- ", this.state.latitude);
-
-
-
-                    console.log("-----------------------------------------")
-                    console.log("lat latitude", this.state.latitude);
-                    console.log("current lat", current_latchar);
-                    console.log("-----------------------------------------")
 
                     if (this.state.latitude == current_latchar) {
                         console.log("not event");
@@ -109,25 +100,23 @@ export default class User extends React.Component {
                             longitude: longitude.toString()
                         }
 
-                        console.log(data);
-
                         this.services.senddata('UpdateLocation', data);
-
-                        console.log("call event");
                     }
 
 
                 }, (error) => {
-                    this.setState({ showAlert: true });
+                    console.log("Update Location error:- ", error)
                 })
             } else {
-                this.setState({ showAlert: true });
+
                 this.handleLocationError(false, infoWindow, map.getCenter());
             }
 
         }, 600000)
 
     }
+
+    // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount() {
 
@@ -219,9 +208,14 @@ export default class User extends React.Component {
 
                                         window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                                             return function () {
+
+                                                if (lastWindow) lastWindow.close();
+
                                                 infowindow.setContent(content);
                                                 infowindow.open(map, marker);
                                                 map.setCenter(marker.getPosition());
+
+                                                lastWindow = infowindow;
                                             };
                                         })(marker, content, infowindow));
 
@@ -242,12 +236,9 @@ export default class User extends React.Component {
         });
 
     }
-    // hideAllInfoWindows(map) {
-    //     console.log("window.google.maps---->",markers)
-    //     markers.forEach((marker) => {
-    //       if(marker.infowindow) marker.infowindow.close(map, marker);
-    //    }); 
-    //  }
+
+    // Declare defaultLocData method for set map of default group member location
+
     defaultLocData() {
 
         userGroupids = "";
@@ -297,15 +288,19 @@ export default class User extends React.Component {
                                                 '</div>';
                                             var infowindow = new window.google.maps.InfoWindow();
 
-                                            window.google.maps.event.addListener(marker, 'click', ( (marker, content, infowindow) => {
-                                                return ()=> {
-                                                    // this.hideAllInfoWindows(map)
+                                            window.google.maps.event.addListener(marker, 'click', ((marker, content, infowindow) => {
+                                                return () => {
+
+                                                    if (lastWindow) lastWindow.close();
+
                                                     infowindow.setContent(content);
                                                     infowindow.open(map, marker);
                                                     map.setCenter(marker.getPosition());
+
+                                                    lastWindow = infowindow;
+
                                                 };
                                             })(marker, content, infowindow));
-
 
                                             markers.push(marker)
 
@@ -323,11 +318,23 @@ export default class User extends React.Component {
 
     }
 
+    // Declare onChangeShareLink method for set value of sharelink
+
     onChangeShareLink(e) {
         this.setState({
             sharelink: e.target.value
         });
     }
+
+    // Declare onChangeInvite method for set calue of invitecode
+
+    onChangeInvite(e) {
+        this.setState({
+            invite: e.target.value
+        });
+    }
+
+    // Declare onChangeGroup method for get and set group wise member location on map
 
     onChangeGroup(e) {
 
@@ -381,9 +388,15 @@ export default class User extends React.Component {
 
                         window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                             return function () {
+
+                                if (lastWindow) lastWindow.close();
+
                                 infowindow.setContent(content);
                                 infowindow.open(map, marker);
                                 map.setCenter(marker.getPosition());
+
+                                lastWindow = infowindow;
+
                             };
                         })(marker, content, infowindow));
 
@@ -397,11 +410,7 @@ export default class User extends React.Component {
 
     }
 
-    onChangeInvite(e) {
-        this.setState({
-            invite: e.target.value
-        });
-    }
+    // Declare onAddDefault method for add member in default group and this added member set location on map
 
     onAddDefault(e) {
         e.preventDefault();
@@ -501,7 +510,7 @@ export default class User extends React.Component {
                                                                 markers.push(marker)
 
                                                                 this.services.offsocket();
-                                                                
+
                                                             })
 
                                                             break;
@@ -510,7 +519,7 @@ export default class User extends React.Component {
                                                 alertify.success(massage);
                                             }
                                         })
-                                        
+
                                         break;
                                 }
                             });
@@ -530,6 +539,8 @@ export default class User extends React.Component {
 
     }
 
+    // Declare handleLocationError method for when any kid of location related error is occur at that time that method handled current location
+
     handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
@@ -538,9 +549,9 @@ export default class User extends React.Component {
         infoWindow.open(map);
     }
 
-    getAllLocations() {
+    // Declare getAllLocations method for set and render map by default when intialize current page
 
-        // let self = this
+    getAllLocations() {
 
         infoWindow = new window.google.maps.InfoWindow();
         if (navigator && navigator.geolocation) {
@@ -549,21 +560,6 @@ export default class User extends React.Component {
                 pos = [position.coords.latitude, position.coords.longitude]
                 let centerpos = { "lat": position.coords.latitude, "lng": position.coords.longitude }
                 map.setCenter(centerpos);
-
-                // var locs = [["21.2111", "72.8630"], ["21.1418", "72.7709"], ["21.2300", "72.9009"]]
-
-                // locs.forEach((item) => {
-
-                //     var uluru = { lat: parseFloat(item[0]), lng: parseFloat(item[1]) };
-                //     marker = new window.google.maps.Marker({
-                //         position: uluru,
-                //         map: map,
-                //         label: 'H'
-                //     })
-
-                //     markers.push(marker)
-                // })
-
 
             }, function (error) {
                 console.log("error", error)
@@ -574,6 +570,8 @@ export default class User extends React.Component {
             this.handleLocationError(false, infoWindow, map.getCenter());
         }
     }
+
+    // Declare copyToClipboard method for copy share link click on button
 
     copyToClipboard(link) {
 
@@ -586,6 +584,8 @@ export default class User extends React.Component {
         alertify.success("Copied!");
 
     }
+
+    // Render HTML page and return it
 
     render() {
 
@@ -607,7 +607,6 @@ export default class User extends React.Component {
                                             <h6 className="m-0 font-weight-bold text-primary">Add New User</h6>
                                         </div>
                                         <div className="card-body">
-                                            {/* <form> */}
                                             <div className="row">
                                                 <div className="col-xl-3">
                                                     <form onSubmit={this.onAddDefault}>
@@ -640,8 +639,6 @@ export default class User extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* </form> */}
                                         </div>
                                     </div>
                                 </div>
@@ -656,7 +653,6 @@ export default class User extends React.Component {
                                             </div>
                                             <div style={{ float: 'right' }}>
                                                 <select className="form-control" onChange={this.onChangeGroup}>
-                                                    {/* <option value="">Select Group</option> */}
                                                     {
                                                         this.state.groups ?
                                                             this.state.groups.map(function (obj, i) {

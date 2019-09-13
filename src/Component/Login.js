@@ -1,3 +1,5 @@
+// Import require modules
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
@@ -5,14 +7,20 @@ import Service from '../Services/service';
 import alertify from 'alertifyjs';
 import CryptoJS from 'crypto-js';
 
+// Declare globle variables for use this page only
+
 var map, marker, infoWindow, bounds;
 var pos = []
 var markers = [];
 
 class Login extends Component {
 
+    // Declare constructor
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods, firebase configuration and class objects for use this page
 
         this.services = new Service();
         this.Google_Login = this.Google_Login.bind(this);
@@ -45,6 +53,8 @@ class Login extends Component {
 
     }
 
+    // Declare componentDidMount method for mount some data and methods on load this page
+
     componentDidMount() {
         this.getMyLocation();
         this.removeLocalstorage();
@@ -72,17 +82,23 @@ class Login extends Component {
 
     }
 
+    // Declare onChangeEmail for set value of email
+
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
         });
     }
 
+    // Declare onChangePassword for set value of password
+
     onChangePassword(e) {
         this.setState({
             password: e.target.value
         });
     }
+
+    // Declare removeLocalstorage for remove all localstorage value
 
     removeLocalstorage() {
         localStorage.removeItem("uid");
@@ -94,6 +110,8 @@ class Login extends Component {
         localStorage.removeItem("flage");
     }
 
+    // Declare handleLocationError method for when any kid of location related error is occur at that time that method handled current location
+
     handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
@@ -101,6 +119,8 @@ class Login extends Component {
             'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
     }
+
+    // Declare getMyLocation method for get current latitude and longitude of user
 
     getMyLocation() {
 
@@ -124,6 +144,8 @@ class Login extends Component {
         }
 
     }
+
+    // Declare Google_Login method for login with google popup open and login
 
     Google_Login = () => {
 
@@ -224,6 +246,8 @@ class Login extends Component {
 
     }
 
+    // Declare onSubmit method for login using email and password.
+
     onSubmit(e) {
         e.preventDefault();
 
@@ -263,10 +287,10 @@ class Login extends Component {
                 var alllongchar = this.state.latitude.split('.');
                 var longchar = alllongchar[0] + "." + alllongchar[1].substring(0, 4);
 
-                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
+                var latitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
                 localStorage.setItem("latitude", latitude.toString());
 
-                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.longitude), 'Location-Sharing');
+                var longitude = CryptoJS.AES.encrypt(JSON.stringify(this.state.latitude), 'Location-Sharing');
                 localStorage.setItem("longitude", longitude.toString());
 
                 var data = {
@@ -328,10 +352,14 @@ class Login extends Component {
 
     }
 
+    // Render HTML page and return it
+
     render() {
         return (
 
             <div className="container">
+
+                {/* This popup is user for when user can not allow location popup in browser at that time display this popup */}
 
                 {
                     this.state.showAlert === true ?
@@ -345,6 +373,10 @@ class Login extends Component {
                         :
                         ''
                 }
+
+                {/* END */}
+
+                {/* Login HTML Page */}
 
                 <div className="row justify-content-center">
 
@@ -408,6 +440,8 @@ class Login extends Component {
                     </div>
 
                 </div>
+
+                {/* END */}
 
             </div>
         );

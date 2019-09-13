@@ -1,3 +1,5 @@
+// Import require modules
+
 import React from 'react';
 import Sidebar from '../Common/Sidebar';
 import Navigation from '../Common/Navigation';
@@ -10,8 +12,12 @@ import CryptoJS from 'crypto-js';
 
 export default class Invite extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods and class objects for use this page
 
         this.services = new Service();
         this.auth = new Auth();
@@ -29,6 +35,7 @@ export default class Invite extends React.Component {
 
     }
 
+    // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount = () => {
 
@@ -43,10 +50,8 @@ export default class Invite extends React.Component {
             var invite = JSON.parse(bytes_invite.toString(CryptoJS.enc.Utf8));
 
             if (invite == id) {
-                console.log("same");
                 this.props.history.push('/');
             } else {
-                console.log("not same");
                 this.setState({
                     otherid: id
                 })
@@ -75,17 +80,23 @@ export default class Invite extends React.Component {
 
     }
 
+    // Declare onChangeGroup event for set value of group
+
     onChangeGroup(e) {
         this.setState({
             gid: e.target.value
         });
     }
 
+    // Declare onChangeInviteCode event for set value of invitecode
+
     onChangeInviteCode(e) {
         this.setState({
             otherid: e.target.value
         });
     }
+
+    // Declare onSubmit method for directly add member in default group
 
     onSubmit(e) {
         e.preventDefault();
@@ -110,7 +121,8 @@ export default class Invite extends React.Component {
 
     }
 
-
+    // Render HTML page and return it
+    
     render() {
 
         return (

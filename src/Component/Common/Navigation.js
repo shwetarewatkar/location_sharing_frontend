@@ -1,11 +1,17 @@
+// Import require modules
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 
 export default class Navigation extends React.Component {
 
+    // Declare constructor 
+
     constructor(props) {
         super(props);
+
+        // Declare state variable and use that on this page
 
         this.state = {
             username: ''
@@ -13,9 +19,13 @@ export default class Navigation extends React.Component {
 
     }
 
+    // Declare componentDidMount method 
+
     componentDidMount() {
         this.userDetails();
     }
+
+    // Declare userDetails method for get username
 
     userDetails() {
 
@@ -31,6 +41,8 @@ export default class Navigation extends React.Component {
 
 
     }
+
+    // Render HTML page and return it
 
     render() {
 

@@ -1,3 +1,5 @@
+// Import require modules
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
@@ -7,8 +9,12 @@ import CryptoJS from 'crypto-js';
 
 export default class Registration extends Component {
 
+    // Declare constructor
+
     constructor(props) {
         super(props);
+
+        // Declare state variables, methods, firebase configuration and class objects for use this page
 
         this.services = new Service();
         this.onChangeUsername = this.onChangeUsername.bind(this);
@@ -46,9 +52,13 @@ export default class Registration extends Component {
 
     }
 
+    // Declare componentDidMount method for mount some data and methods on load this page
+
     componentDidMount() {
         this.getMyLocation();
     }
+
+    // Declare getMyLocation method for get current latitude and longitude of user
 
     getMyLocation() {
 
@@ -60,8 +70,6 @@ export default class Registration extends Component {
                     latitude: position.coords.longitude.toString(),
                     longitude: position.coords.latitude.toString(),
                 })
-                console.log("latitude:- ", position.coords.latitude.toString());
-                console.log("longitude:- ", position.coords.longitude.toString());
             }, (error) => {
                 console.log("error from location:- ", error);
             })
@@ -69,11 +77,15 @@ export default class Registration extends Component {
 
     }
 
+    // Declare onChangeUsername method to set value of username
+
     onChangeUsername(e) {
         this.setState({
             username: e.target.value
         });
     }
+
+    // Declare onChangeEmail method to set value of email
 
     onChangeEmail(e) {
         this.setState({
@@ -81,17 +93,23 @@ export default class Registration extends Component {
         });
     }
 
+    // Declare onChangePassword method to set value of password
+
     onChangePassword(e) {
         this.setState({
             password: e.target.value
         });
     }
 
+    // Declare onChangeRepassword method to set value of repassword
+
     onChangeRepassword(e) {
         this.setState({
             repassword: e.target.value
         });
     }
+
+    // Declare Google_Login method for login with google popup open and login
 
     Google_Login = () => {
 
@@ -120,8 +138,8 @@ export default class Registration extends Component {
                 email: user.email,
                 username: user.displayName,
                 flage: true,
-                latitude: longitude.toString(),
-                longitude: latitude.toString(),
+                latitude: latitude.toString(),
+                longitude: longitude.toString(),
                 // lat: latchar,
                 // long: longchar
             }
@@ -190,6 +208,8 @@ export default class Registration extends Component {
 
 
     }
+
+    // Declare onSubmit method for register new account in location sharing web application
 
     onSubmit(e) {
         e.preventDefault();
@@ -294,12 +314,11 @@ export default class Registration extends Component {
             }).catch(error => {
                 alertify.error(error.message);
             });
-
-
         }
 
     }
 
+    // Render HTML page and return it
 
     render() {
         return (
@@ -360,9 +379,6 @@ export default class Registration extends Component {
                                         <button onClick={this.Google_Login} type="button" className="btn btn-google btn-user btn-block" style={{ background: '#ea4335', color: 'white' }}>
                                             <i className="fab fa-google fa-fw"></i> Login with Google
                                         </button>
-                                        {/* <Link href="index.html" className="btn btn-facebook btn-user btn-block" style={{ background: '#3b5998', color: 'white' }}>
-                                            <i className="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </Link> */}
                                     </form>
                                     <hr />
                                     <div className="text-center">
