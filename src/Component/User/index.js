@@ -501,9 +501,14 @@ export default class User extends React.Component {
 
                                                                 window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                                                                     return function () {
+
+                                                                        if (lastWindow) lastWindow.close();
+
                                                                         infowindow.setContent(content);
                                                                         infowindow.open(map, marker);
                                                                         map.setCenter(marker.getPosition());
+
+                                                                        lastWindow = infowindow;
                                                                     };
                                                                 })(marker, content, infowindow));
 
