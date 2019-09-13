@@ -36,13 +36,14 @@ export default class People extends React.Component {
             userupdatedata: []
         };
 
-        this.auth.authantication();
-
     }
 
     // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount() {
+
+        this.auth.authantication();
+        this.auth.reconnection();
 
         let decryptedData_uid = localStorage.getItem('uid');
         var bytes_uid = CryptoJS.AES.decrypt(decryptedData_uid.toString(), 'Location-Sharing');

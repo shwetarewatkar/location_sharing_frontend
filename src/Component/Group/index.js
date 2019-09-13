@@ -61,6 +61,7 @@ export default class Groups extends React.Component {
     componentDidMount() {
         this.getAllGroups();
         this.auth.authantication();
+        this.auth.reconnection();
     }
 
     // Declare getAllGroups method for get all group of user

@@ -1,3 +1,5 @@
+// Import require modules
+
 import React, { Component } from 'react';
 import { Route, Router, Link } from 'react-router-dom';
 import history from './History';
@@ -11,6 +13,8 @@ import Invite from './Component/Invite/index';
 import Forgot from './Component/Forgotpassword';
 
 class Routers extends Component {
+
+    // Render All Web Application Routs to call pages
 
     render() {
         return (

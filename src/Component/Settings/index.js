@@ -69,8 +69,6 @@ export default class Setting extends React.Component {
             this.state.showforgot = false;
         }
 
-
-
     }
 
     // Declare onChangeEmail event for set value of email

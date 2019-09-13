@@ -40,6 +40,7 @@ export default class Invite extends React.Component {
     componentDidMount = () => {
 
         this.auth.authantication();
+        this.auth.reconnection();
 
         let params = (new URL(document.location)).searchParams;
         let id = params.get('id')

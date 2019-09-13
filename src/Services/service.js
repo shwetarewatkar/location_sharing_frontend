@@ -22,10 +22,14 @@ export default class Service extends Component {
 
     // Reconnection of socket server
 
-    connect(e, Data) {
-        return socket.on('connect', () => {
-            socket.emit('req', { event: e, data: Data });
-        });
+    reconnect(e, Data) {
+
+        if (socket == null) {
+            return socket.on('connect', () => {
+                socket.emit('req', { event: e, data: Data });
+            });
+        }
+        
     }
 
     // Node server api for registration

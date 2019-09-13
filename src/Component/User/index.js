@@ -80,8 +80,8 @@ export default class User extends React.Component {
                 location.getCurrentPosition((position) => {
 
                     this.setState({
-                        latitude: position.coords.longitude.toString(),
-                        longitude: position.coords.latitude.toString(),
+                        latitude: position.coords.latitude.toString(),
+                        longitude: position.coords.longitude.toString(),
                     })
 
                     if (this.state.latitude == current_latchar) {
@@ -121,6 +121,7 @@ export default class User extends React.Component {
     componentDidMount() {
 
         this.auth.authantication();
+        this.auth.reconnection();
 
         setTimeout(() => {
             map = new window.google.maps.Map(document.getElementById('map'), {
