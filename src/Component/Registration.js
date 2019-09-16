@@ -39,11 +39,11 @@ export default class Registration extends Component {
         }
 
         var config = {
-            apiKey: "AIzaSyBLE5yO7ozj753lTC22A94OuTsLYvZGnpE",
-            authDomain: "location-sharing-31142.firebaseapp.com",
-            databaseURL: "https://location-sharing-31142.firebaseio.com",
-            projectId: "location-sharing-31142",
-            storageBucket: "gs://location-sharing-31142.appspot.com/"
+            apiKey: "AIzaSyAmMZ1vHju7_xZwAwdXpb8NZWB4dyqInbI",
+            authDomain: "geoshare-4cb74.firebaseapp.com",
+            databaseURL: "https://geoshare-4cb74.firebaseio.com",
+            projectId: "geoshare-4cb74",
+            storageBucket: "geoshare-4cb74.appspot.com"
         };
 
         if (!firebase.apps.length) {

@@ -39,21 +39,21 @@ class Login extends Component {
             showAlert: false
         }
 
-        var config = {
-            apiKey: "AIzaSyBLE5yO7ozj753lTC22A94OuTsLYvZGnpE",
-            authDomain: "location-sharing-31142.firebaseapp.com",
-            databaseURL: "https://location-sharing-31142.firebaseio.com",
-            projectId: "location-sharing-31142",
-            storageBucket: "gs://location-sharing-31142.appspot.com/"
-        };
-
         // var config = {
-        //     apiKey: "AIzaSyAmMZ1vHju7_xZwAwdXpb8NZWB4dyqInbI",
-        //     authDomain: "geoshare-4cb74.firebaseapp.com",
-        //     databaseURL: "https://geoshare-4cb74.firebaseio.com",
-        //     projectId: "geoshare-4cb74",
-        //     storageBucket: "geoshare-4cb74.appspot.com"
+        //     apiKey: "AIzaSyBLE5yO7ozj753lTC22A94OuTsLYvZGnpE",
+        //     authDomain: "location-sharing-31142.firebaseapp.com",
+        //     databaseURL: "https://location-sharing-31142.firebaseio.com",
+        //     projectId: "location-sharing-31142",
+        //     storageBucket: "gs://location-sharing-31142.appspot.com/"
         // };
+
+        var config = {
+            apiKey: "AIzaSyAmMZ1vHju7_xZwAwdXpb8NZWB4dyqInbI",
+            authDomain: "geoshare-4cb74.firebaseapp.com",
+            databaseURL: "https://geoshare-4cb74.firebaseio.com",
+            projectId: "geoshare-4cb74",
+            storageBucket: "geoshare-4cb74.appspot.com"
+        };
 
         if (!firebase.apps.length) {
             firebase.initializeApp(config);
@@ -67,15 +67,15 @@ class Login extends Component {
         this.getMyLocation();
         this.removeLocalstorage();
 
-        // var locs = [["U2FsdGVkX1/QOkkRU8V25Rql8FQAnvkO5IX9Y8dx9yg=", "U2FsdGVkX19GEbyVrXb1OTN3XIEdNbUxUtlnMvhydUw="], 
-        //    ["U2FsdGVkX1/Tld9GTh3umf/VGgCbpn+xrfh/QmD0wdg=", "U2FsdGVkX1+545QUuZ2ES5/tCwL0xd7HYWK4kMbXYpg="], 
-        //    ["U2FsdGVkX19IR/Lnbk7i3Sn1ZiOlifngrVQyOMDDDp0=", "U2FsdGVkX1+v13xzp1mLaBROstTJInJ/Lk+dt2+2Jtc="],
-        //    ["U2FsdGVkX1+mwdcukmNbe/k1Ktr2LnTHiz0qrjfhdPU=","U2FsdGVkX19jj9K2WRMuL2c7CRcKL55rPVCFf2+57DU="],
-        //     ["U2FsdGVkX19IR/Lnbk7i3Sn1ZiOlifngrVQyOMDDDp0=", "U2FsdGVkX1+v13xzp1mLaBROstTJInJ/Lk+dt2+2Jtc="],
-        //     ["U2FsdGVkX19ElrxspeakJCeVbbtjwIL8g2NSdu8lYNM=", "U2FsdGVkX1+ahw9Ssw4cCgsY/toUibRN8uJQoGgmwD4="]];
+        // var locs = [["U2FsdGVkX18w43rdL+IT7LOvY5eY/u7dq4SLod2bU1I=", "U2FsdGVkX185uOgLSY2FG9zejjAKRdO2wP7KYS9Csps="], 
+        //    ["U2FsdGVkX1/DvNxKXdLmdSQWc0P/XBDwZ+UZoLOcMRE=", "U2FsdGVkX19PwZxbLBzAwOMoJJvBmhbBOxbstDsyojQ="], 
+        //    ["U2FsdGVkX1+8sTHFueQPWKNVBejM+Z7s30BPnZ+f1lU=", "U2FsdGVkX19lh83juxwAfnVlgmRGJ2E9Y7FLS1m8Yg0="],
+        //    ["U2FsdGVkX1/Uo8yTy1nMnH2I5beV6exTHbxjjzGWY+o=","U2FsdGVkX1/T3SqrPzJXicmTOKN1piCRCxmjBrXam3U="],
+        //     ["U2FsdGVkX1/IoDyWtSzY1muKtwHVjdD9EYPjaspuzkk=", "U2FsdGVkX1+zvK8foCKGZiZxvVepibpm7Mrmbj1m3t0="],
+        //     ["U2FsdGVkX1+aqkQfrscepEeSyG2xhMDyjyuQcXzB3ks=", "U2FsdGVkX1+Z2i2COlwpS2kVreqhApOFncem6mSvUMY="]];
 
-        // var lt = "20.5786";
-        // var ln = "73.7507";
+        // var lt = "21.2306";
+        // var ln = "72.9015";
         // var latitude = CryptoJS.AES.encrypt(JSON.stringify(lt), 'Location-Sharing');
         // var longitude = CryptoJS.AES.encrypt(JSON.stringify(ln), 'Location-Sharing');
         // console.log("latitude new user:- ", latitude.toString());
