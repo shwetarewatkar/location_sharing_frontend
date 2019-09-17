@@ -44,6 +44,27 @@ Available Scripts
       However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.		
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Change Firebase Settings
+===========================================================================================================================================================================================
+
+- This configuration change in below listed pages.
+
+  Note:- this settings store one variable name is config and this variable declared in constructor
+
+        var config = {
+            apiKey: "AIzaSyAmMZ1vHju7_xZwAwdXpb8NZWB4dyqInbI",
+            authDomain: "geoshare-4cb74.firebaseapp.com",
+            databaseURL: "https://geoshare-4cb74.firebaseio.com",
+            projectId: "geoshare-4cb74",
+            storageBucket: "geoshare-4cb74.appspot.com"
+        };
+
+  > src/Component/Login.js
+  > src/Component/Registration.js
+  > src/Component/Forgotpassword.js
+  > src/Component/Settings/index.js
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Learn More
 ===========================================================================================================================================================================================
 
