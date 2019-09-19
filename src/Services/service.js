@@ -8,17 +8,17 @@ import { Observable, Observer } from 'rxjs';
 
 // Connection URL of socket server 
 
-const socket = socketIOClient("https://location.artoon.in:3001");
+const socket = socketIOClient("https://ls.shwetarewatkar.com:3001");
 
 export default class Service extends Component {
 
     // Connection URL of node server  
 
-    apiURL = "https://location.artoon.in:3000";
+    apiURL = "https://ls.shwetarewatkar.com:3000";
 
     // Globlly Declared invite link
 
-    domail = "https://location.artoon.in/invite?id=";
+    domail = "https://ls.shwetarewatkar.com/invite?id=";
 
     // Reconnection of socket server
 
