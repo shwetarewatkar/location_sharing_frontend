@@ -59,9 +59,9 @@ export default class Groups extends React.Component {
     // Declare componentDidMount method for mount some data and methods on load this page
 
     componentDidMount() {
-        this.getAllGroups();
         this.auth.authantication();
         this.auth.reconnection();
+        this.getAllGroups();
     }
 
     // Declare getAllGroups method for get all group of user
@@ -292,7 +292,7 @@ export default class Groups extends React.Component {
         this.services.getdata().subscribe((res) => {
             switch (res.event) {
                 case 'userDetails':
-                    
+
                     this.setState({
                         userupdatedata: res.data
                     })

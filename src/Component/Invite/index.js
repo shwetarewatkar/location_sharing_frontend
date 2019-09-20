@@ -33,6 +33,11 @@ export default class Invite extends React.Component {
             groups: []
         }
 
+        let decryptedData_uid = localStorage.getItem('uid');
+        if(decryptedData_uid == null){
+            this.props.history.push('/');
+        }
+
     }
 
     // Declare componentDidMount method for mount some data and methods on load this page

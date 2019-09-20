@@ -48,7 +48,8 @@ export default class User extends React.Component {
             a: '',
             showMenu: true,
             latitude: '',
-            longitude: ''
+            longitude: '',
+            gid: ''
         }
 
         // this interval set 10 minutes and trace current location of login user
@@ -253,6 +254,10 @@ export default class User extends React.Component {
 
                         if (item.default) {
 
+                            this.setState({
+                                gid: item._id
+                            })
+
                             userGroupids = item.members;
                             currentGroupid = item._id;
 
@@ -345,6 +350,10 @@ export default class User extends React.Component {
 
         var newgid = e.target.value;
 
+        this.setState({
+            gid: e.target.value
+        })
+
         var data = {
             uid: this.state.uid,
             GroupId: e.target.value
@@ -430,113 +439,89 @@ export default class User extends React.Component {
 
         if (this.state.errinvite == true) {
 
+
+
             var data = {
                 uid: this.state.uid,
+                GroupId: currentGroupid,
                 InviteCode: this.state.invite
-            }
+            };
 
-            this.services.senddata('AddToDefult', data);
+            this.services.senddata('AddMember', data);
             this.services.getdata().subscribe((res) => {
-
                 switch (res.event) {
-                    case 'AddDefaultMemebrResp':
+                    case 'AddMemebrResp':
 
-                        if (res.data.status == true) {
+                        if (res.data.error) {
+                            alertify.error(res.data.error);
 
-                            var massage = res.data.message;
+                            this.setState({
+                                invite: ''
+                            });
+                            this.services.offsocket();
+                        } else {
 
                             this.setState({
                                 invite: ''
                             });
 
-                            this.services.senddata('GetGroupsList', '');
+                            var data = {
+                                uid: this.state.uid,
+                                GroupId: currentGroupid
+                            }
+
+                            this.services.senddata('GetMemeberList', data);
                             this.services.getdata().subscribe((res) => {
                                 switch (res.event) {
-                                    case 'GroupList':
+                                    case 'GroupMemberList':
 
-                                        for (var i = 0; i < markers.length; i++) {
-                                            markers[i].setMap(null);
-                                        }
+                                        res.data.MemberList.forEach((item, i) => {
 
-                                        res.data.forEach((item, i) => {
+                                            // var uluru = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
 
-                                            if (item.default) {
+                                            let decryptedData_lat = item.latitude;
+                                            var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
+                                            var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
 
-                                                for (var i = 0; i < markers.length; i++) {
-                                                    markers[i].setMap(null);
-                                                }
+                                            let decryptedData_long = item.longitude;
+                                            var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
+                                            var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
 
-                                                var data = {
-                                                    uid: this.state.uid,
-                                                    GroupId: item._id
-                                                }
+                                            var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
 
-                                                this.services.senddata('GetMemeberList', data);
-                                                this.services.getdata().subscribe((res) => {
-                                                    switch (res.event) {
-                                                        case 'GroupMemberList':
+                                            marker = new window.google.maps.Marker({
+                                                position: uluru,
+                                                map: map,
+                                                title: item.username
+                                            })
 
-                                                            res.data.MemberList.forEach((items, ii) => {
+                                            var content = '<div id="content">' +
+                                                '<h6>' + item.username + '</h6>' +
+                                                '</div>';
+                                            var infowindow = new window.google.maps.InfoWindow();
 
-                                                                let decryptedData_lat = items.latitude;
-                                                                var bytes_lat = CryptoJS.AES.decrypt(decryptedData_lat.toString(), 'Location-Sharing');
-                                                                var lat = JSON.parse(bytes_lat.toString(CryptoJS.enc.Utf8));
+                                            window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                                                return function () {
 
-                                                                let decryptedData_long = items.longitude;
-                                                                var bytes_long = CryptoJS.AES.decrypt(decryptedData_long.toString(), 'Location-Sharing');
-                                                                var long = JSON.parse(bytes_long.toString(CryptoJS.enc.Utf8));
+                                                    if (lastWindow) lastWindow.close();
 
-                                                                var uluru = { lat: parseFloat(lat), lng: parseFloat(long) };
+                                                    infowindow.setContent(content);
+                                                    infowindow.open(map, marker);
+                                                    map.setCenter(marker.getPosition());
 
-                                                                marker = new window.google.maps.Marker({
-                                                                    position: uluru,
-                                                                    map: map,
-                                                                    title: items.username
-                                                                })
+                                                    lastWindow = infowindow;
+                                                };
+                                            })(marker, content, infowindow));
 
-                                                                var content = '<div id="content">' +
-                                                                    '<h6>' + items.username + '</h6>' +
-                                                                    '</div>';
-                                                                var infowindow = new window.google.maps.InfoWindow();
+                                            markers.push(marker)
 
-                                                                window.google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
-                                                                    return function () {
-
-                                                                        if (lastWindow) lastWindow.close();
-
-                                                                        infowindow.setContent(content);
-                                                                        infowindow.open(map, marker);
-                                                                        map.setCenter(marker.getPosition());
-
-                                                                        lastWindow = infowindow;
-                                                                    };
-                                                                })(marker, content, infowindow));
-
-
-                                                                markers.push(marker)
-
-                                                                this.services.offsocket();
-
-                                                            })
-
-                                                            break;
-                                                    }
-                                                });
-                                                alertify.success(massage);
-                                            }
+                                            this.services.offsocket();
                                         })
-
                                         break;
                                 }
                             });
-                        } else {
-                            this.setState({
-                                invite: ''
-                            });
-                            alertify.error(res.data.message);
-                            this.services.offsocket();
+                            alertify.success("Add successfully");
                         }
-
                         break;
                 }
             });
